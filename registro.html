@@ -1,33 +1,440 @@
+```html
 <!doctype html>
 <html lang="es">
 <head>
-  <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
   <title>Registro | Café Club</title>
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <meta
+    name="description"
+    content="Regístrate en Café Club y comienza a disfrutar tus beneficios."
+  >
+
+  <link
+    href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+    rel="stylesheet"
+  >
   <link href="assets/css/styles.css" rel="stylesheet">
+
+  <style>
+    .google-signin-placeholder {
+      min-height: 44px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .registration-divider {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      color: #777;
+      font-size: 0.85rem;
+      margin: 1.25rem 0;
+    }
+
+    .registration-divider::before,
+    .registration-divider::after {
+      content: "";
+      height: 1px;
+      flex: 1;
+      background: #dee2e6;
+    }
+
+    [hidden] {
+      display: none !important;
+    }
+  </style>
 </head>
+
 <body>
-  <nav class="navbar navbar-dark coffee-nav"><div class="container"><a class="navbar-brand fw-bold" href="index.html">☕ Café Club</a><a class="nav-link text-white" href="index.html">Volver al inicio</a></div></nav>
+  <nav class="navbar navbar-dark coffee-nav">
+    <div class="container">
+      <a class="navbar-brand fw-bold" href="index.html">
+        ☕ Café Club
+      </a>
+
+      <a class="nav-link text-white" href="index.html">
+        Volver al inicio
+      </a>
+    </div>
+  </nav>
+
   <main class="container py-5">
-    <div class="row justify-content-center"><div class="col-lg-7 col-xl-6">
-      <div class="page-heading text-center mb-4"><span class="eyebrow">BIENVENIDO/A</span><h1 class="fw-bold mt-2">Crea tu tarjeta digital</h1><p class="text-secondary">Regístrate una vez y empieza a disfrutar tus beneficios.</p></div>
-      <div class="form-card">
-        <div class="alert alert-warning small">Demo: este formulario guarda datos de prueba en el almacenamiento local de tu navegador. No ingreses información real todavía.</div>
-        <form id="registrationForm" novalidate>
-          <div class="mb-3"><label for="cafeId" class="form-label">Cafetería</label><select class="form-select" id="cafeId" required><option value="aroma">Café Aroma</option><option value="central">Café Central</option><option value="sur">Café del Sur</option></select><div class="form-text">El QR de cada local puede abrir esta página con la cafetería preseleccionada.</div></div>
-          <div class="mb-3"><label for="fullName" class="form-label">Nombre completo</label><input class="form-control" id="fullName" autocomplete="name" placeholder="Ej. Ana Pérez" required minlength="2"><div class="invalid-feedback">Escribe tu nombre.</div></div>
-          <div class="mb-3"><label for="email" class="form-label">Correo electrónico</label><input type="email" class="form-control" id="email" autocomplete="email" placeholder="tu@correo.com" required><div class="invalid-feedback">Escribe un correo válido.</div></div>
-          <div class="mb-3"><label for="birthday" class="form-label">Fecha de nacimiento <span class="text-secondary">(opcional)</span></label><input type="date" class="form-control" id="birthday"><div class="form-text">Solo si quieres recibir el beneficio de cumpleaños.</div></div>
-          <div class="form-check mb-3"><input class="form-check-input" type="checkbox" id="privacyConsent" required><label class="form-check-label" for="privacyConsent">He leído el aviso de privacidad y acepto que se usen estos datos para administrar mi tarjeta.</label><div class="invalid-feedback">Debes aceptar el uso necesario de los datos para continuar.</div></div>
-          <div class="form-check mb-4"><input class="form-check-input" type="checkbox" id="marketingConsent"><label class="form-check-label" for="marketingConsent">Acepto recibir promociones por correo electrónico. (Opcional)</label></div>
-          <button class="btn btn-coffee btn-lg w-100" type="submit">Crear mi tarjeta</button>
-        </form>
-        <div id="registrationMessage" class="mt-3" aria-live="polite"></div>
+    <div class="row justify-content-center">
+      <div class="col-lg-7 col-xl-6">
+
+        <div class="page-heading text-center mb-4">
+          <span class="eyebrow">BIENVENIDO/A</span>
+
+          <h1 class="fw-bold mt-2">
+            Tu tarjeta digital te espera
+          </h1>
+
+          <p class="text-secondary">
+            Regístrate una vez y acumula estrellas en cualquiera
+            de nuestros locales.
+          </p>
+        </div>
+
+        <div class="form-card">
+
+          <!-- Local identificado mediante el QR -->
+          <div class="alert alert-light border mb-4">
+            <div class="small text-secondary">
+              Estás registrándote desde
+            </div>
+
+            <div class="fw-semibold" id="cafeName">
+              Comprobando cafetería...
+            </div>
+
+            <div class="small text-secondary mt-1" id="cafeHelp">
+              Tu tarjeta podrá utilizarse en los locales participantes.
+            </div>
+          </div>
+
+          <!-- Mensajes de estado -->
+          <div
+            id="registrationMessage"
+            class="mb-3"
+            role="status"
+            aria-live="polite"
+          ></div>
+
+          <!--
+            ACCESO CON GOOGLE
+
+            Para habilitarlo hay que configurar Google Identity Services
+            con el ID de cliente de tu proyecto de Google Cloud y validar
+            el token en el backend.
+          -->
+          <section id="authSection">
+            <h2 class="h5 fw-bold text-center">
+              Accede con tu cuenta de Google
+            </h2>
+
+            <p class="text-secondary small text-center mb-4">
+              Si ya tienes tu tarjeta, podrás acceder a ella.
+              Si es tu primera vez, te ayudaremos a crearla.
+            </p>
+
+            <div
+              id="googleSignInButton"
+              class="google-signin-placeholder"
+            >
+              <button
+                type="button"
+                id="googleSetupButton"
+                class="btn btn-outline-secondary w-100"
+              >
+                <span class="fw-semibold">
+                  Continuar con Google
+                </span>
+              </button>
+            </div>
+
+            <p class="small text-secondary text-center mt-3 mb-0">
+              El acceso con Google aún requiere configuración.
+              Este botón no inicia sesión por sí solo.
+            </p>
+          </section>
+
+          <div class="registration-divider">
+            Registro de perfil
+          </div>
+
+          <!--
+            FORMULARIO DE PERFIL
+
+            La sección permanece deshabilitada hasta integrar
+            correctamente la autenticación y el backend.
+          -->
+          <section id="profileSection">
+            <h2 class="h5 fw-bold mb-3">
+              Completa tus datos
+            </h2>
+
+            <div class="alert alert-warning small">
+              La conexión con Google Sheets todavía no está habilitada.
+              No ingreses información personal real en esta versión.
+            </div>
+
+            <form id="registrationForm" novalidate>
+
+              <!-- Identidad de Google verificada por el servidor -->
+              <div class="mb-3">
+                <label for="email" class="form-label">
+                  Correo electrónico
+                </label>
+
+                <input
+                  type="email"
+                  class="form-control"
+                  id="email"
+                  autocomplete="email"
+                  placeholder="Tu correo de Google"
+                  readonly
+                  required
+                >
+
+                <div class="form-text">
+                  El correo se obtendrá de la cuenta autenticada.
+                </div>
+              </div>
+
+              <div class="mb-3">
+                <label for="fullName" class="form-label">
+                  Nombre completo
+                </label>
+
+                <input
+                  type="text"
+                  class="form-control"
+                  id="fullName"
+                  autocomplete="name"
+                  placeholder="Ej. Ana Pérez"
+                  minlength="2"
+                  maxlength="100"
+                  required
+                >
+
+                <div class="invalid-feedback">
+                  Escribe tu nombre completo.
+                </div>
+              </div>
+
+              <div class="mb-3">
+                <label for="birthday" class="form-label">
+                  Fecha de nacimiento
+                  <span class="text-secondary">(opcional)</span>
+                </label>
+
+                <input
+                  type="date"
+                  class="form-control"
+                  id="birthday"
+                  autocomplete="bday"
+                >
+
+                <div class="form-text">
+                  Puedes indicarla si deseas participar en el beneficio
+                  de cumpleaños.
+                </div>
+              </div>
+
+              <div class="form-check mb-3">
+                <input
+                  class="form-check-input"
+                  type="checkbox"
+                  id="privacyConsent"
+                  required
+                >
+
+                <label
+                  class="form-check-label"
+                  for="privacyConsent"
+                >
+                  He leído el aviso de privacidad y acepto que mis datos
+                  se utilicen para administrar mi tarjeta de fidelización.
+                </label>
+
+                <div class="invalid-feedback">
+                  Debes aceptar el uso necesario de los datos para continuar.
+                </div>
+              </div>
+
+              <div class="form-check mb-4">
+                <input
+                  class="form-check-input"
+                  type="checkbox"
+                  id="marketingConsent"
+                >
+
+                <label
+                  class="form-check-label"
+                  for="marketingConsent"
+                >
+                  Acepto recibir promociones y novedades por correo
+                  electrónico. (Opcional)
+                </label>
+              </div>
+
+              <button
+                class="btn btn-coffee btn-lg w-100"
+                type="submit"
+                id="submitRegistration"
+                disabled
+              >
+                Crear mi tarjeta
+              </button>
+
+              <p class="small text-secondary text-center mt-3 mb-0">
+                El registro se habilitará cuando esté conectado
+                el servicio de autenticación.
+              </p>
+            </form>
+          </section>
+
+        </div>
       </div>
-    </div></div>
+    </div>
   </main>
-  <footer class="site-footer"><div class="container">Café Club · Prototipo de registro</div></footer>
-  <script src="assets/js/app.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+  <footer class="site-footer">
+    <div
+      class="container d-flex flex-column flex-md-row
+             justify-content-between align-items-center gap-2"
+    >
+      <span>© 2026 Café Club</span>
+
+      <span>
+        Creado por
+        <a
+          href="https://itera-ecru.vercel.app/"
+          target="_blank"
+          rel="noopener noreferrer"
+        >ITERA</a>
+        — IMAGINA | DESARROLLA | IMPLEMENTA
+      </span>
+    </div>
+  </footer>
+
+  <script>
+    "use strict";
+
+    /*
+     * CONFIGURACIÓN DE LOCALES
+     *
+     * Los slug deben coincidir con los parámetros de los QR:
+     * registro.html?cafe=aroma
+     * registro.html?cafe=central
+     *
+     * Más adelante estos datos se obtendrán de Apps Script.
+     */
+
+    const CAFETERIAS = {
+      aroma: {
+        nombre: "Café Aroma"
+      },
+
+      central: {
+        nombre: "Café Central"
+      },
+
+      sur: {
+        nombre: "Café del Sur"
+      }
+    };
+
+    const params = new URLSearchParams(window.location.search);
+    const cafeSlug = (params.get("cafe") || "").trim().toLowerCase();
+
+    const cafeNameElement = document.getElementById("cafeName");
+    const cafeHelpElement = document.getElementById("cafeHelp");
+    const authSection = document.getElementById("authSection");
+    const profileSection = document.getElementById("profileSection");
+    const registrationForm = document.getElementById("registrationForm");
+    const registrationMessage = document.getElementById("registrationMessage");
+    const googleSetupButton = document.getElementById("googleSetupButton");
+
+    let cafeteriaValida = false;
+
+    function mostrarMensaje(texto, tipo = "info") {
+      registrationMessage.replaceChildren();
+
+      const alert = document.createElement("div");
+      alert.className = `alert alert-${tipo}`;
+      alert.textContent = texto;
+
+      registrationMessage.appendChild(alert);
+    }
+
+    function inicializarCafeteria() {
+      const cafeteria = CAFETERIAS[cafeSlug];
+
+      if (!cafeteria) {
+        cafeNameElement.textContent = "Local no identificado";
+        cafeHelpElement.textContent =
+          "Escanea el QR del local o solicita un enlace válido al personal.";
+
+        authSection.hidden = true;
+        profileSection.hidden = true;
+
+        mostrarMensaje(
+          "El enlace no identifica una cafetería válida. Comprueba el QR.",
+          "danger"
+        );
+
+        return;
+      }
+
+      cafeteriaValida = true;
+      cafeNameElement.textContent = cafeteria.nombre;
+      cafeHelpElement.textContent =
+        "Tu tarjeta será válida en los locales participantes de este negocio.";
+
+      /*
+       * No habilitamos el registro ni simulamos un login.
+       * Primero debe integrarse la autenticación real.
+       */
+      profileSection.hidden = false;
+
+      mostrarMensaje(
+        "La interfaz está preparada. El acceso con Google y el registro real aún no están conectados.",
+        "warning"
+      );
+    }
+
+    googleSetupButton.addEventListener("click", function () {
+      if (!cafeteriaValida) {
+        mostrarMensaje("No se pudo identificar el local.", "danger");
+        return;
+      }
+
+      mostrarMensaje(
+        "El inicio de sesión estará disponible cuando configuremos Google Identity Services y el backend de Apps Script.",
+        "info"
+      );
+    });
+
+    registrationForm.addEventListener("submit", function (event) {
+      event.preventDefault();
+
+      if (!cafeteriaValida) {
+        mostrarMensaje(
+          "No se puede continuar sin identificar una cafetería válida.",
+          "danger"
+        );
+        return;
+      }
+
+      if (!registrationForm.checkValidity()) {
+        registrationForm.classList.add("was-validated");
+        mostrarMensaje(
+          "Revisa los campos obligatorios antes de continuar.",
+          "warning"
+        );
+        return;
+      }
+
+      /*
+       * No se crean cuentas ni se guardan datos aquí.
+       * El registro se implementará después de verificar el token
+       * de Google y conectar el backend.
+       */
+      mostrarMensaje(
+        "El registro real todavía no está habilitado. No se ha guardado ningún dato.",
+        "warning"
+      );
+    });
+
+    inicializarCafeteria();
+  </script>
+
+  <script
+    src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+  ></script>
 </body>
 </html>
