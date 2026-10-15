@@ -1,0 +1,105 @@
+<!-- registro.html -->
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Registro — Café Club</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="assets/css/styles.css">
+  <script src="https://accounts.google.com/gsi/client" async defer></script>
+</head>
+<body class="bg-light">
+
+  <nav class="navbar navbar-expand-lg navbar-dark sticky-top">
+    <div class="container">
+      <a class="navbar-brand fw-bold" href="index.html">☕ Café Club</a>
+      <div class="navbar-nav ms-auto">
+        <a class="nav-link" href="cafeterias.html">Sucursales</a>
+      </div>
+    </div>
+  </nav>
+
+  <main class="container my-5" style="max-width: 600px;">
+    <div class="card border-0 shadow-sm rounded-4 p-4 p-md-5 bg-white">
+      <h1 class="h3 fw-bold text-center mb-2">Únete a Café Club</h1>
+      <p class="text-center text-muted mb-4">Crea tu tarjeta digital para todas nuestras sucursales.</p>
+
+      <div id="alerta-registro" class="alert d-none" role="alert"></div>
+
+      <!-- Botón Registrar con Google -->
+      <div class="text-center mb-4">
+        <div id="g_id_onload"
+             data-client_id="31756994840-b1a3hbpdal3bu5tb2jfq3vb0atvthn24.apps.googleusercontent.com"
+             data-callback="handleGoogleSignIn"
+             data-auto_prompt="false">
+        </div>
+        <div class="g_id_signin"
+             data-type="standard"
+             data-size="large"
+             data-theme="outline"
+             data-text="sign_in_with"
+             data-shape="rectangular"
+             data-logo_alignment="left">
+        </div>
+        <div class="d-flex align-items-center my-3">
+          <hr class="flex-grow-1">
+          <span class="px-3 text-muted small">o regístrate con correo</span>
+          <hr class="flex-grow-1">
+        </div>
+      </div>
+
+      <form id="form-registro" novalidate>
+        <div class="mb-3">
+          <label for="nombre" class="form-label fw-semibold">Nombre completo</label>
+          <input type="text" class="form-control" id="nombre" required placeholder="Ej. Sofía Valdés">
+          <div class="invalid-feedback">Ingresa tu nombre completo.</div>
+        </div>
+
+        <div class="mb-3">
+          <label for="email" class="form-label fw-semibold">Correo electrónico</label>
+          <input type="email" class="form-control" id="email" required placeholder="tu@correo.com">
+          <div class="invalid-feedback">Ingresa un correo válido.</div>
+        </div>
+
+        <div class="mb-3">
+          <label for="fechaNacimiento" class="form-label fw-semibold">Fecha de nacimiento <span class="text-muted fw-normal">(activa promoción de cumpleaños)</span></label>
+          <input type="date" class="form-control" id="fechaNacimiento">
+        </div>
+
+        <div class="mb-3 form-check">
+          <input type="checkbox" class="form-check-input" id="terminos" required>
+          <label class="form-check-label text-muted small" for="terminos">
+            Acepto el consentimiento para gestionar mi tarjeta digital de Café Club. *
+          </label>
+          <div class="invalid-feedback">Debes aceptar los términos para continuar.</div>
+        </div>
+
+        <div class="mb-4 form-check">
+          <input type="checkbox" class="form-check-input" id="promos">
+          <label class="form-check-label text-muted small" for="promos">
+            Acepto recibir notificaciones promocionales, beneficios especiales y novedades por correo.
+          </label>
+        </div>
+
+        <button type="submit" class="btn btn-primary w-100 py-2 fw-semibold">Crear mi Tarjeta</button>
+      </form>
+    </div>
+  </main>
+
+  <footer class="site-footer mt-auto py-4 bg-white border-top">
+    <div class="container d-flex flex-column flex-md-row justify-content-between align-items-center gap-2">
+      <span>© 2026 Café Club</span>
+      <span>
+        Creado por
+        <a href="https://itera-ecru.vercel.app/" target="_blank" rel="noopener noreferrer">ITERA</a>
+        — IMAGINA | DESARROLLA | IMPLEMENTA
+      </span>
+    </div>
+  </footer>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="assets/js/app.js"></script>
+</body>
+</html>
