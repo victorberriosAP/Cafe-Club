@@ -1,4 +1,4 @@
-<!-- admin.html -->
+<!-- index_admin.html -->
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -20,8 +20,8 @@
       <div class="collapse navbar-collapse" id="navbarNav">
         <ul class="navbar-nav ms-auto">
           <li class="nav-item"><a class="nav-link" href="index.html">Inicio</a></li>
-          <li class="nav-item"><a class="nav-link" href="cafeterias.html">Cafeterías</a></li>
-          <li class="nav-item"><a class="nav-link active" href="admin.html">Admin</a></li>
+          <li class="nav-item"><a class="nav-link" href="cafeterias.html">Sucursales</a></li>
+          <li class="nav-item"><a class="nav-link active" href="index_admin.html">Admin</a></li>
         </ul>
       </div>
     </div>
@@ -30,15 +30,15 @@
   <main class="container my-5" style="max-width: 900px;">
     
     <div class="alert alert-info border-0 shadow-sm rounded-4 mb-4" role="alert">
-      <strong>Panel de Administración Global:</strong> Resumen de operación y configuración conceptual de la red de cafeterías. Funciones avanzadas pendientes de conexión con Google Apps Script.
+      <strong>Panel de Administración Global (Requiere Login):</strong> Resumen de operación y configuración de sucursales. Preparado para conexión con Google Apps Script.
     </div>
 
     <div class="row g-4 mb-4">
       <div class="col-md-4">
         <div class="card border-0 shadow-sm rounded-4 p-4 bg-white text-center">
-          <span class="fs-1 mb-2">☕</span>
-          <h2 class="h6 text-muted">Cafeterías Activas</h2>
-          <span class="fs-3 fw-bold" id="admin-total-cafes">3</span>
+          <span class="fs-1 mb-2">🏢</span>
+          <h2 class="h6 text-muted">Sucursales Activas</h2>
+          <span class="fs-3 fw-bold" id="admin-total-sucursales">3</span>
         </div>
       </div>
       <div class="col-md-4">
@@ -58,34 +58,35 @@
     </div>
 
     <div class="card border-0 shadow-sm rounded-4 p-4 p-md-5 bg-white mb-4">
-      <h2 class="h4 fw-bold mb-3">Listado de Cafeterías en la Red</h2>
+      <h2 class="h4 fw-bold mb-3">Administrar Sucursales</h2>
+      <p class="text-muted small mb-3">Gestión de locales bajo la marca Café Club organizados por barrio o comuna.</p>
       <div class="table-responsive">
         <table class="table align-middle mb-0">
           <thead class="table-light">
             <tr>
               <th>ID</th>
-              <th>Nombre</th>
-              <th>Slug</th>
+              <th>Sucursal</th>
+              <th>Barrio / Comuna (Slug)</th>
               <th>Estado</th>
             </tr>
           </thead>
           <tbody>
             <tr>
-              <td><code>cafe_aroma</code></td>
-              <td>Aroma de Barrio</td>
-              <td><code>aroma</code></td>
+              <td><code>suc_providencia</code></td>
+              <td>Café Club — Providencia</td>
+              <td><code>providencia</code></td>
               <td><span class="badge bg-success">Activo</span></td>
             </tr>
             <tr>
-              <td><code>cafe_moka</code></td>
-              <td>Moka Express</td>
-              <td><code>moka</code></td>
+              <td><code>suc_santiago</code></td>
+              <td>Café Club — Centro Histórico</td>
+              <td><code>centro</code></td>
               <td><span class="badge bg-success">Activo</span></td>
             </tr>
             <tr>
-              <td><code>cafe_zen</code></td>
-              <td>Zenith Specialty Coffee</td>
-              <td><code>zen</code></td>
+              <td><code>suc_vitacura</code></td>
+              <td>Café Club — Vitacura</td>
+              <td><code>vitacura</code></td>
               <td><span class="badge bg-success">Activo</span></td>
             </tr>
           </tbody>
@@ -94,11 +95,11 @@
     </div>
 
     <div class="card border-0 shadow-sm rounded-4 p-4 bg-white">
-      <h2 class="h5 fw-bold mb-3">Funciones en desarrollo (Próximos pasos)</h2>
+      <h2 class="h5 fw-bold mb-3">Funciones en desarrollo</h2>
       <ul class="text-muted mb-0">
-        <li>Sincronización bidireccional con Google Sheets mediante Web Apps (Apps Script).</li>
-        <li>Automatización de correos de bienvenida y campañas de inactividad con Gmail API.</li>
-        <li>Autenticación segura de personal de staff por sucursal con roles y permisos.</li>
+        <li>Conexión bidireccional con Google Sheets mediante API Apps Script.</li>
+        <li>Campañas automatizadas de Gmail para cumpleaños e inactividad.</li>
+        <li>Control de acceso seguro por roles de administración global.</li>
       </ul>
     </div>
 
@@ -106,8 +107,8 @@
 
   <footer class="site-footer mt-auto py-4 bg-white border-top">
     <div class="container d-flex flex-column flex-md-row justify-content-between align-items-center gap-2">
-      <span class="text-muted">© 2026 Café Club</span>
-      <span class="text-muted">
+      <span>© 2026 Café Club</span>
+      <span>
         Creado por
         <a href="https://itera-ecru.vercel.app/" target="_blank" rel="noopener noreferrer">ITERA</a>
         — IMAGINA | DESARROLLA | IMPLEMENTA

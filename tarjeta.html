@@ -20,7 +20,7 @@
       <div class="collapse navbar-collapse" id="navbarNav">
         <ul class="navbar-nav ms-auto">
           <li class="nav-item"><a class="nav-link" href="index.html">Inicio</a></li>
-          <li class="nav-item"><a class="nav-link" href="cafeterias.html">Cafeterías</a></li>
+          <li class="nav-item"><a class="nav-link" href="cafeterias.html">Sucursales & QR</a></li>
           <li class="nav-item"><a class="nav-link active" href="tarjeta.html">Mi Tarjeta</a></li>
           <li class="nav-item"><a class="nav-link" href="premios.html">Premios</a></li>
           <li class="nav-item"><a class="nav-link" href="staff.html">Staff</a></li>
@@ -31,20 +31,18 @@
 
   <main class="container my-5" style="max-width: 650px;">
     
-    <!-- Estado sin tarjeta -->
     <div id="sin-tarjeta" class="card border-0 shadow-sm rounded-4 p-5 text-center bg-white">
       <div class="fs-1 mb-3">🎫</div>
       <h2 class="h4 fw-bold mb-3">No tienes una tarjeta activa</h2>
-      <p class="text-muted mb-4">Regístrate en alguna de nuestras cafeterías asociadas para obtener tu tarjeta digital y comenzar a acumular estrellas.</p>
-      <a href="cafeterias.html" class="btn btn-primary px-4">Ver Cafeterías Disponibles</a>
+      <p class="text-muted mb-4">Regístrate mediante Google o formulario para obtener tu tarjeta digital válida en todas nuestras sucursales.</p>
+      <a href="registro.html" class="btn btn-primary px-4">Registrarse ahora</a>
     </div>
 
-    <!-- Tarjeta Digital Activa -->
     <div id="con-tarjeta" class="d-none">
       <div class="card digital-card border-0 shadow-lg rounded-4 p-4 p-md-5 text-white mb-4">
         <div class="d-flex justify-content-between align-items-start mb-4">
           <div>
-            <span class="badge bg-white text-dark px-3 py-2 rounded-pill fw-semibold mb-2" id="tarjeta-cafe">Cafetería</span>
+            <span class="badge bg-white text-dark px-3 py-2 rounded-pill fw-semibold mb-2">Café Club — Multisucursal</span>
             <h1 class="h3 fw-bold mb-0" id="tarjeta-nombre">Nombre Cliente</h1>
           </div>
           <div class="text-end">
@@ -53,18 +51,14 @@
           </div>
         </div>
 
-        <!-- Casillas de estrellas (10 espacios) -->
-        <div class="stars-grid my-3" id="tarjeta-estrellas-grid">
-          <!-- Generado por JS -->
-        </div>
+        <div class="stars-grid my-3" id="tarjeta-estrellas-grid"></div>
 
-        <div class="mt-4 pt-3 border-top border-light border-opacity-25 d-flex justify-content-between align-items-center">
+        <div class="mt-4 pt-3 border-top border-light border-opacity-25 d-flex justify-content-between align-items-center flex-wrap gap-2">
           <span class="small" id="tarjeta-estado-recompensa">¡Te faltan 10 estrellas para tu café gratis!</span>
-          <button class="btn btn-sm btn-light text-dark fw-semibold" id="btn-reset-demo">Reiniciar Demo</button>
+          <button class="btn btn-sm btn-light text-dark fw-semibold" id="btn-cerrar-sesion">Cerrar Sesión</button>
         </div>
       </div>
 
-      <!-- Beneficios adicionales -->
       <div class="row g-3">
         <div class="col-md-6">
           <div class="card border-0 shadow-sm rounded-4 p-4 h-100 bg-white">
@@ -72,7 +66,7 @@
               <span class="fs-3">🎁</span>
               <h3 class="h6 fw-bold mb-0">Café Gratis</h3>
             </div>
-            <p class="text-muted small mb-0">Al completar tus 10 estrellas, muestra esta tarjeta al barista para canjear tu bebida favorita.</p>
+            <p class="text-muted small mb-0">Canjeable al completar 10 estrellas en cualquiera de nuestras sucursales.</p>
           </div>
         </div>
         <div class="col-md-6">
@@ -81,7 +75,7 @@
               <span class="fs-3">🎂</span>
               <h3 class="h6 fw-bold mb-0">Regalo de Cumpleaños</h3>
             </div>
-            <p class="text-muted small mb-0">Disfruta de un pastel o bebida especial cortesía de la casa durante tu mes de cumpleaños.</p>
+            <p class="text-muted small mb-0">Disfruta un pastel y bebida de cortesía durante tu mes de cumpleaños.</p>
           </div>
         </div>
       </div>
@@ -91,8 +85,8 @@
 
   <footer class="site-footer mt-auto py-4 bg-white border-top">
     <div class="container d-flex flex-column flex-md-row justify-content-between align-items-center gap-2">
-      <span class="text-muted">© 2026 Café Club</span>
-      <span class="text-muted">
+      <span>© 2026 Café Club</span>
+      <span>
         Creado por
         <a href="https://itera-ecru.vercel.app/" target="_blank" rel="noopener noreferrer">ITERA</a>
         — IMAGINA | DESARROLLA | IMPLEMENTA

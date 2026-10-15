@@ -17,7 +17,6 @@ body {
   flex-direction: column;
 }
 
-/* Barra de navegación */
 .navbar {
   background-color: var(--coffee-dark);
 }
@@ -30,18 +29,15 @@ body {
   opacity: 0.8;
 }
 
-/* Sección Hero */
 .hero-section {
   background: linear-gradient(135deg, var(--beige) 0%, #FFFFFF 100%);
   border-bottom: 1px solid rgba(111, 78, 55, 0.1);
 }
 
-/* Tarjeta Digital */
 .digital-card {
   background: linear-gradient(135deg, var(--coffee-dark) 0%, var(--coffee) 100%);
 }
 
-/* Rejilla de estrellas en tarjeta */
 .stars-grid {
   display: grid;
   grid-template-columns: repeat(5, 1fr);
@@ -63,9 +59,14 @@ body {
   background: #FFC107;
   border: none;
   box-shadow: 0 0 10px rgba(255, 193, 7, 0.5);
+  color: #000;
 }
 
 /* Crédito de autoría ITERA en todos los pies de página */
+.site-footer {
+  background-color: #FFFFFF;
+}
+
 .site-footer a {
   color: var(--coffee);
   font-weight: 700;
