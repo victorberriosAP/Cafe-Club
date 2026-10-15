@@ -39,47 +39,190 @@
     return new Date(iso).toLocaleString("es-CL", { dateStyle: "short", timeStyle: "short" });
   }
 
-  // Registro: captura el identificador de cafetería de la URL ?cafe=aroma.
+  // Registro real: Google Identity Services + API de Vercel + Google Apps Script.
+  // El token de Google solo se mantiene en memoria; nunca se guarda en localStorage.
   const registrationForm = document.querySelector("#registrationForm");
   if (registrationForm) {
     const params = new URLSearchParams(window.location.search);
     const cafeParam = params.get("cafe");
     const cafeSelect = document.querySelector("#cafeId");
+    const nameInput = document.querySelector("#fullName");
+    const emailInput = document.querySelector("#email");
+    const birthdayInput = document.querySelector("#birthday");
+    const privacyInput = document.querySelector("#privacyConsent");
+    const marketingInput = document.querySelector("#marketingConsent");
+    const message = document.querySelector("#registrationMessage");
+    const googleButton = document.querySelector("#googleSignInButton");
+    const googleStatus = document.querySelector("#googleSignInStatus");
+    const submitButton = registrationForm.querySelector('button[type="submit"]');
+
+    let googleCredential = null;
+    let googleIdentity = null;
+    let registrationComplete = false;
+
     if (cafeParam && CAFE_NAMES[cafeParam]) cafeSelect.value = cafeParam;
 
-    registrationForm.addEventListener("submit", (event) => {
-      event.preventDefault();
-      registrationForm.classList.add("was-validated");
-      if (!registrationForm.checkValidity()) return;
+    function showRegistrationMessage(type, text) {
+      message.replaceChildren();
+      const alert = document.createElement("div");
+      alert.className = "alert alert-" + type;
+      alert.setAttribute("role", "status");
+      alert.textContent = text;
+      message.appendChild(alert);
+    }
 
-      const data = loadData();
-      const email = document.querySelector("#email").value.trim().toLowerCase();
-      const cafeId = cafeSelect.value;
-      const duplicate = data.clients.find(c => c.cafeId === cafeId && c.email.toLowerCase() === email);
-      const message = document.querySelector("#registrationMessage");
+    function decodeGoogleCredential(credential) {
+      try {
+        const payload = credential.split(".")[1]
+          .replace(/-/g, "+").replace(/_/g, "/");
+        const decoded = atob(payload.padEnd(payload.length + (4 - payload.length % 4) % 4, "="));
+        return JSON.parse(decodeURIComponent(
+          Array.from(decoded, char => "%" + char.charCodeAt(0).toString(16).padStart(2, "0")).join("")
+        ));
+      } catch (error) {
+        return null;
+      }
+    }
 
-      if (duplicate) {
-        message.innerHTML = '<div class="alert alert-info">Ya existe una tarjeta demo con ese correo en esta cafetería. Puedes consultar <a href="tarjeta.html">tu tarjeta</a>.</div>';
+    function handleGoogleCredential(response) {
+      if (!response || !response.credential) {
+        googleCredential = null;
+        googleIdentity = null;
+        googleStatus.textContent = "No se pudo iniciar sesión con Google. Inténtalo nuevamente.";
+        googleStatus.className = "small text-danger mt-2";
         return;
       }
-      const client = {
-        id: makeId("cli"),
-        cafeId,
-        name: document.querySelector("#fullName").value.trim(),
-        email,
-        birthday: document.querySelector("#birthday").value,
-        privacyConsent: document.querySelector("#privacyConsent").checked,
-        marketingConsent: document.querySelector("#marketingConsent").checked,
-        stars: 0,
-        createdAt: new Date().toISOString()
+
+      const identity = decodeGoogleCredential(response.credential);
+      if (!identity || !identity.email) {
+        googleCredential = null;
+        googleIdentity = null;
+        googleStatus.textContent = "Google no devolvió un correo válido. Inténtalo nuevamente.";
+        googleStatus.className = "small text-danger mt-2";
+        return;
+      }
+
+      googleCredential = response.credential;
+      googleIdentity = identity;
+      if (!nameInput.value.trim() && identity.name) nameInput.value = identity.name;
+      emailInput.value = identity.email;
+      emailInput.readOnly = true;
+      emailInput.setAttribute("aria-readonly", "true");
+      googleStatus.textContent = "Sesión iniciada como " + identity.email + ". Ya puedes crear tu tarjeta.";
+      googleStatus.className = "small text-success mt-2";
+      showRegistrationMessage("info", "Cuenta de Google verificada en el navegador. Completa el formulario y crea tu tarjeta.");
+    }
+
+    function initializeGoogleSignIn() {
+      const clientId = "31756994840-b1a3hbpdal3bu5tb2jfq3vb0atvthn24.apps.googleusercontent.com";
+      const google = window.google;
+      if (!google || !google.accounts || !google.accounts.id) {
+        googleStatus.textContent = "No se pudo cargar el inicio de sesión de Google. Comprueba tu conexión y recarga la página.";
+        googleStatus.className = "small text-danger mt-2";
+        return;
+      }
+
+      try {
+        google.accounts.id.initialize({
+          client_id: clientId,
+          callback: handleGoogleCredential,
+          auto_select: false,
+          cancel_on_tap_outside: true
+        });
+        google.accounts.id.renderButton(googleButton, {
+          type: "standard",
+          theme: "outline",
+          size: "large",
+          text: "signin_with",
+          shape: "rectangular",
+          width: 320,
+          locale: "es"
+        });
+      } catch (error) {
+        console.error("No se pudo inicializar Google Identity Services.", error);
+        googleStatus.textContent = "No se pudo preparar el botón de Google. Revisa la configuración del cliente OAuth.";
+        googleStatus.className = "small text-danger mt-2";
+      }
+    }
+
+    window.addEventListener("load", initializeGoogleSignIn);
+    // En algunos navegadores el evento load puede haberse disparado antes de ejecutar este bloque.
+    if (document.readyState === "complete") initializeGoogleSignIn();
+
+    registrationForm.addEventListener("submit", async event => {
+      event.preventDefault();
+      registrationForm.classList.add("was-validated");
+
+      if (!registrationForm.checkValidity()) {
+        showRegistrationMessage("warning", "Revisa los campos obligatorios antes de continuar.");
+        registrationForm.querySelector(":invalid")?.focus();
+        return;
+      }
+
+      if (!googleCredential || !googleIdentity) {
+        showRegistrationMessage("warning", "Primero inicia sesión con Google usando el botón de arriba.");
+        googleButton.scrollIntoView({ behavior: "smooth", block: "center" });
+        return;
+      }
+
+      if (!privacyInput.checked) {
+        showRegistrationMessage("warning", "Debes aceptar el aviso de privacidad para crear tu tarjeta.");
+        privacyInput.focus();
+        return;
+      }
+
+      const payload = {
+        accion: "registrarCliente",
+        credential: googleCredential,
+        nombre: nameInput.value.trim(),
+        fechaNacimiento: birthdayInput.value,
+        cafe: cafeSelect.value,
+        aceptaPrivacidad: privacyInput.checked,
+        aceptaMarketing: marketingInput.checked
       };
-      data.clients.push(client);
-      data.activity.unshift({ id: makeId("act"), cafeId, clientId: client.id, name: client.name, type: "Registro", date: new Date().toISOString() });
-      saveData(data);
-      message.innerHTML = '<div class="alert alert-success">¡Tarjeta demo creada! <a href="tarjeta.html">Ver tarjeta digital</a>.</div>';
-      registrationForm.reset();
-      cafeSelect.value = cafeId;
-      registrationForm.classList.remove("was-validated");
+
+      submitButton.disabled = true;
+      submitButton.textContent = "Creando tu tarjeta…";
+      showRegistrationMessage("info", "Estamos guardando tu registro. No cierres esta página todavía.");
+
+      try {
+        const response = await fetch("/api/registro", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(payload),
+          credentials: "same-origin"
+        });
+
+        const result = await response.json().catch(() => null);
+        if (!response.ok || !result) {
+          throw new Error(result && result.mensaje
+            ? result.mensaje
+            : "No pudimos comunicarnos con el servidor. Inténtalo nuevamente.");
+        }
+        if (!result.correcto) {
+          throw new Error(result.mensaje || "No se pudo crear la tarjeta.");
+        }
+
+        if (result.existente) {
+          showRegistrationMessage("info", result.mensaje || "Ya existe una tarjeta asociada a esta cuenta de Google.");
+          registrationComplete = true;
+          submitButton.textContent = "Tarjeta ya registrada";
+        } else {
+          showRegistrationMessage("success", result.mensaje || "Tu tarjeta se ha creado correctamente en Café Club.");
+          registrationComplete = true;
+          submitButton.textContent = "Tarjeta creada";
+          googleStatus.textContent = "Registro completado correctamente.";
+          googleStatus.className = "small text-success mt-2";
+        }
+      } catch (error) {
+        console.error("Error al registrar cliente:", error);
+        showRegistrationMessage("danger", error.message || "Ocurrió un error al guardar tu registro.");
+      } finally {
+        // Solo se desactiva después de confirmar que la tarjeta ya existe o se creó.
+        // Si hubo un error de red o validación del servidor, el usuario puede reintentar.
+        submitButton.disabled = registrationComplete;
+        if (!registrationComplete) submitButton.textContent = "Crear mi tarjeta";
+      }
     });
   }
 
