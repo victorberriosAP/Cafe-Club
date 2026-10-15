@@ -1,93 +1,95 @@
-<!doctype html>
+<!-- index.html -->
+<!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Café Club | Fidelización digital</title>
-  <!-- Bootstrap 5 desde CDN: requiere conexión a internet -->
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-  <link href="assets/css/styles.css" rel="stylesheet">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Café Club — Fidelización Digital</title>
+  <!-- Bootstrap 5 CDN -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <!-- Estilos personalizados -->
+  <link rel="stylesheet" href="assets/css/styles.css">
 </head>
 <body>
-  <nav class="navbar navbar-expand-lg navbar-dark coffee-nav">
+
+  <!-- Barra de navegación -->
+  <nav class="navbar navbar-expand-lg navbar-dark sticky-top">
     <div class="container">
       <a class="navbar-brand fw-bold" href="index.html">☕ Café Club</a>
-      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mainNav" aria-controls="mainNav" aria-expanded="false" aria-label="Abrir menú"><span class="navbar-toggler-icon"></span></button>
-      <div class="collapse navbar-collapse" id="mainNav">
-        <div class="navbar-nav ms-auto">
-          <a class="nav-link active" href="index.html">Inicio</a>
-          <!-- <a class="nav-link" href="registro.html">Registrarme</a> -->
-          <a class="nav-link" href="registro.html?cafe=aroma">Registrarme</a>
-          <a class="nav-link" href="tarjeta.html">Mi tarjeta</a>
-          <a class="nav-link" href="staff.html">Panel cafetería</a>
-          <a class="nav-link" href="cafeterias.html">Cafeterías</a>
-        </div>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav ms-auto">
+          <li class="nav-item"><a class="nav-link active" href="index.html">Inicio</a></li>
+          <li class="nav-item"><a class="nav-link" href="cafeterias.html">Cafeterías</a></li>
+          <li class="nav-item"><a class="nav-link" href="tarjeta.html">Mi Tarjeta</a></li>
+          <li class="nav-item"><a class="nav-link" href="premios.html">Premios</a></li>
+          <li class="nav-item"><a class="nav-link" href="staff.html">Staff</a></li>
+          <li class="nav-item"><a class="nav-link" href="admin.html">Admin</a></li>
+        </ul>
       </div>
     </div>
   </nav>
 
-  <main>
-    <section class="hero-section py-5">
-      <div class="container py-lg-4">
-        <div class="row align-items-center g-4">
-          <div class="col-lg-6">
-            <span class="eyebrow">TU CAFÉ, TUS BENEFICIOS</span>
-            <h1 class="display-4 fw-bold mt-3">Cada visita<br><span class="text-coffee-light">te acerca a un premio.</span></h1>
-            <p class="lead mt-3">Acumula estrellas en tus cafeterías favoritas y disfruta beneficios especiales. Sin descargar una aplicación.</p>
-            <div class="d-flex flex-wrap gap-2 mt-4">
-              <a class="btn btn-light btn-lg" href="registro.html?cafe=aroma">Crear mi tarjeta</a>
-              <a class="btn btn-outline-light btn-lg" href="tarjeta.html">Ver tarjeta demo</a>
-            </div>
-            <p class="small mt-3 opacity-75">Prototipo visual: los datos de esta versión se guardan solo en este navegador.</p>
-          </div>
-          <div class="col-lg-6">
-            <div class="hero-card mx-auto">
-              <div class="d-flex justify-content-between align-items-start">
-                <div><div class="small opacity-75">CAFÉ CLUB</div><h3 class="mt-2 mb-0">Tu próxima taza</h3></div>
-                <div class="coffee-cup">☕</div>
-              </div>
-              <div class="star-row my-4" aria-label="Seis de diez estrellas"><span>★</span><span>★</span><span>★</span><span>★</span><span>★</span><span>★</span><span class="empty">★</span><span class="empty">★</span><span class="empty">★</span><span class="empty">★</span></div>
-              <div class="d-flex justify-content-between small"><span>6 de 10 estrellas</span><span>60%</span></div>
-              <div class="progress mt-2" role="progressbar" aria-label="Progreso a la recompensa" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100"><div class="progress-bar" style="width:60%"></div></div>
-              <div class="mt-4 reward-strip"><span>🎁</span><div><strong>Tu recompensa</strong><div class="small">Un café gratis al completar 10 estrellas</div></div></div>
-            </div>
-          </div>
+  <!-- Sección Hero -->
+  <header class="hero-section text-center py-5">
+    <div class="container py-4">
+      <h1 class="display-4 fw-bold mb-3">Tu café favorito tiene premio</h1>
+      <p class="lead mb-4 mx-auto" style="max-width: 600px;">
+        Únete a Café Club, acumula estrellas con cada visita y disfruta de café gratis en las mejores cafeterías de la ciudad. Sin tarjetas de papel, todo desde tu teléfono.
+      </p>
+      <div class="d-flex justify-content-center gap-3">
+        <a href="cafeterias.html" class="btn btn-primary btn-lg px-4">Ver Cafeterías</a>
+        <a href="tarjeta.html" class="btn btn-outline-secondary btn-lg px-4">Consultar Tarjeta</a>
+      </div>
+    </div>
+  </header>
+
+  <!-- Sección de Beneficios -->
+  <main class="container my-5">
+    <h2 class="text-center mb-5 fw-bold">¿Cómo funciona Café Club?</h2>
+    <div class="row g-4">
+      <div class="col-md-4 text-center">
+        <div class="p-4 border rounded-4 shadow-sm h-100 bg-white">
+          <div class="fs-1 mb-3">📱</div>
+          <h3 class="h5 fw-bold">1. Escanea el QR</h3>
+          <p class="text-muted">Regístrate en segundos escaneando el código QR que encontrarás en tu cafetería participante.</p>
         </div>
       </div>
-    </section>
-
-    <section class="container py-5">
-      <div class="text-center mb-4"><span class="eyebrow">ASÍ DE FÁCIL</span><h2 class="fw-bold mt-2">Cómo funciona</h2></div>
-      <div class="row g-3">
-        <div class="col-md-4"><div class="feature-card h-100"><div class="feature-icon">▦</div><h5>1. Escanea el QR</h5><p class="text-secondary mb-0">Regístrate desde tu celular y crea tu tarjeta digital.</p></div></div>
-        <div class="col-md-4"><div class="feature-card h-100"><div class="feature-icon">★</div><h5>2. Acumula estrellas</h5><p class="text-secondary mb-0">El equipo de la cafetería valida tus visitas.</p></div></div>
-        <div class="col-md-4"><div class="feature-card h-100"><div class="feature-icon">🎁</div><h5>3. Disfruta premios</h5><p class="text-secondary mb-0">Consulta tus recompensas y canjéalas en el local.</p></div></div>
+      <div class="col-md-4 text-center">
+        <div class="p-4 border rounded-4 shadow-sm h-100 bg-white">
+          <div class="fs-1 mb-3">⭐</div>
+          <h3 class="h5 fw-bold">2. Acumula Estrellas</h3>
+          <p class="text-muted">Muestra tu tarjeta digital al personal en cada visita para sumar una estrella a tu cuenta.</p>
+        </div>
       </div>
-    </section>
-    <section class="soft-section py-5"><div class="container text-center"><h2 class="fw-bold">Una comunidad, muchas cafeterías</h2><p class="text-secondary">Cada cafetería puede tener su perfil, su QR y sus beneficios.</p><a href="cafeterias.html" class="btn btn-coffee">Explorar cafeterías demo</a></div></section>
+      <div class="col-md-4 text-center">
+        <div class="p-4 border rounded-4 shadow-sm h-100 bg-white">
+          <div class="fs-1 mb-3">🎁</div>
+          <h3 class="h5 fw-bold">3. Canjea Premios</h3>
+          <p class="text-muted">Al juntar 10 estrellas, llévate un café gratis y accede a beneficios exclusivos de cumpleaños.</p>
+        </div>
+      </div>
+    </div>
   </main>
 
-
-  <footer class="site-footer">
-    <div class="container">
-      <div class="d-flex flex-column gap-2 ms-3">
-        <span>© 2026 Café Club · Prototipo</span>
-        <span>Diseño demostrativo.</span>
-        <span>
-          Creado por
-          <a href="https://itera-ecru.vercel.app/"
-             target="_blank"
-             rel="noopener noreferrer"
-             class="text-decoration-none">
-            ITERA
-          </a>
-          — IMAGINA | DESARROLLA | IMPLEMENTA
-        </span>
-      </div>
+  <!-- Footer obligatorio -->
+  <footer class="site-footer mt-auto py-4 bg-white border-top">
+    <div class="container d-flex flex-column flex-md-row justify-content-between align-items-center gap-2">
+      <span class="text-muted">© 2026 Café Club</span>
+      <span class="text-muted">
+        Creado por
+        <a href="https://itera-ecru.vercel.app/" target="_blank" rel="noopener noreferrer">ITERA</a>
+        — IMAGINA | DESARROLLA | IMPLEMENTA
+      </span>
     </div>
   </footer>
 
-
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <!-- Bootstrap JS -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="assets/js/app.js"></script>
 </body>
 </html>

@@ -1,35 +1,106 @@
-<!doctype html>
+<!-- tarjeta.html -->
+<!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Mi tarjeta | Café Club</title>
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"><link href="assets/css/styles.css" rel="stylesheet">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mi Tarjeta — Café Club</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="assets/css/styles.css">
 </head>
-<body>
-  <nav class="navbar navbar-dark coffee-nav"><div class="container"><a class="navbar-brand fw-bold" href="index.html">☕ Café Club</a><a class="nav-link text-white" href="registro.html">Crear tarjeta</a></div></nav>
-  <main class="container py-5">
-    <div class="text-center mb-4"><span class="eyebrow">TU ESPACIO PERSONAL</span><h1 class="fw-bold mt-2">Mi tarjeta</h1><p class="text-secondary">Consulta tu progreso y los beneficios disponibles.</p></div>
-    <div class="row justify-content-center g-4">
-      <div class="col-lg-7">
-        <section class="loyalty-card">
-          <div class="d-flex justify-content-between align-items-start"><div><div class="small text-uppercase opacity-75">Café Club · <span id="cardCafe">Café Aroma</span></div><h2 class="mt-2" id="cardName">¡Hola, Ana!</h2><p class="mb-0 opacity-75">Cada visita te acerca a una recompensa.</p></div><div class="coffee-cup">☕</div></div>
-          <div class="d-flex justify-content-between align-items-end mt-4"><div><div class="display-5 fw-bold"><span id="starCount">6</span><span class="fs-4 opacity-75"> / 10</span></div><div>estrellas acumuladas</div></div><span class="badge rounded-pill text-bg-light text-coffee" id="progressLabel">60% completado</span></div>
-          <div class="star-grid mt-3" id="starGrid" aria-label="Estrellas de fidelización"></div>
-          <div class="progress mt-3"><div id="cardProgress" class="progress-bar" style="width:60%"></div></div>
-          <div class="mt-3 small" id="nextReward">Te faltan 4 estrellas para un café gratis.</div>
-        </section>
-        <div class="alert alert-info mt-3 small">Vista demo. El número de estrellas se puede simular desde el panel de prueba; todavía no hay validación real del servidor.</div>
+<body class="bg-light">
+
+  <nav class="navbar navbar-expand-lg navbar-dark sticky-top">
+    <div class="container">
+      <a class="navbar-brand fw-bold" href="index.html">☕ Café Club</a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav ms-auto">
+          <li class="nav-item"><a class="nav-link" href="index.html">Inicio</a></li>
+          <li class="nav-item"><a class="nav-link" href="cafeterias.html">Cafeterías</a></li>
+          <li class="nav-item"><a class="nav-link active" href="tarjeta.html">Mi Tarjeta</a></li>
+          <li class="nav-item"><a class="nav-link" href="premios.html">Premios</a></li>
+          <li class="nav-item"><a class="nav-link" href="staff.html">Staff</a></li>
+        </ul>
       </div>
-      <div class="col-lg-5">
-        <div class="form-card h-100"><h4 class="fw-bold">Tus beneficios</h4>
-          <div class="reward-item mt-3"><div class="reward-icon">☕</div><div class="flex-grow-1"><strong>Café gratis</strong><div class="small text-secondary">Al completar 10 estrellas</div><span class="badge text-bg-secondary mt-1" id="coffeeRewardStatus">En progreso</span></div></div>
-          <div class="reward-item mt-3"><div class="reward-icon">🎂</div><div class="flex-grow-1"><strong>Beneficio de cumpleaños</strong><div class="small text-secondary">Pastel y café, según condiciones del local.</div><span class="badge text-bg-light mt-1">Por confirmar</span></div></div>
-          <a href="premios.html" class="btn btn-outline-coffee w-100 mt-4">Ver premios</a>
+    </div>
+  </nav>
+
+  <main class="container my-5" style="max-width: 650px;">
+    
+    <!-- Estado sin tarjeta -->
+    <div id="sin-tarjeta" class="card border-0 shadow-sm rounded-4 p-5 text-center bg-white">
+      <div class="fs-1 mb-3">🎫</div>
+      <h2 class="h4 fw-bold mb-3">No tienes una tarjeta activa</h2>
+      <p class="text-muted mb-4">Regístrate en alguna de nuestras cafeterías asociadas para obtener tu tarjeta digital y comenzar a acumular estrellas.</p>
+      <a href="cafeterias.html" class="btn btn-primary px-4">Ver Cafeterías Disponibles</a>
+    </div>
+
+    <!-- Tarjeta Digital Activa -->
+    <div id="con-tarjeta" class="d-none">
+      <div class="card digital-card border-0 shadow-lg rounded-4 p-4 p-md-5 text-white mb-4">
+        <div class="d-flex justify-content-between align-items-start mb-4">
+          <div>
+            <span class="badge bg-white text-dark px-3 py-2 rounded-pill fw-semibold mb-2" id="tarjeta-cafe">Cafetería</span>
+            <h1 class="h3 fw-bold mb-0" id="tarjeta-nombre">Nombre Cliente</h1>
+          </div>
+          <div class="text-end">
+            <span class="fs-2 fw-bold" id="tarjeta-estrellas-num">0</span><span class="fs-5">/10</span>
+            <div class="small opacity-75">Estrellas</div>
+          </div>
+        </div>
+
+        <!-- Casillas de estrellas (10 espacios) -->
+        <div class="stars-grid my-3" id="tarjeta-estrellas-grid">
+          <!-- Generado por JS -->
+        </div>
+
+        <div class="mt-4 pt-3 border-top border-light border-opacity-25 d-flex justify-content-between align-items-center">
+          <span class="small" id="tarjeta-estado-recompensa">¡Te faltan 10 estrellas para tu café gratis!</span>
+          <button class="btn btn-sm btn-light text-dark fw-semibold" id="btn-reset-demo">Reiniciar Demo</button>
+        </div>
+      </div>
+
+      <!-- Beneficios adicionales -->
+      <div class="row g-3">
+        <div class="col-md-6">
+          <div class="card border-0 shadow-sm rounded-4 p-4 h-100 bg-white">
+            <div class="d-flex align-items-center gap-3 mb-2">
+              <span class="fs-3">🎁</span>
+              <h3 class="h6 fw-bold mb-0">Café Gratis</h3>
+            </div>
+            <p class="text-muted small mb-0">Al completar tus 10 estrellas, muestra esta tarjeta al barista para canjear tu bebida favorita.</p>
+          </div>
+        </div>
+        <div class="col-md-6">
+          <div class="card border-0 shadow-sm rounded-4 p-4 h-100 bg-white">
+            <div class="d-flex align-items-center gap-3 mb-2">
+              <span class="fs-3">🎂</span>
+              <h3 class="h6 fw-bold mb-0">Regalo de Cumpleaños</h3>
+            </div>
+            <p class="text-muted small mb-0">Disfruta de un pastel o bebida especial cortesía de la casa durante tu mes de cumpleaños.</p>
+          </div>
         </div>
       </div>
     </div>
+
   </main>
-  <footer class="site-footer"><div class="container">Cuida tu tarjeta: los premios se canjean con el equipo de la cafetería.</div></footer>
+
+  <footer class="site-footer mt-auto py-4 bg-white border-top">
+    <div class="container d-flex flex-column flex-md-row justify-content-between align-items-center gap-2">
+      <span class="text-muted">© 2026 Café Club</span>
+      <span class="text-muted">
+        Creado por
+        <a href="https://itera-ecru.vercel.app/" target="_blank" rel="noopener noreferrer">ITERA</a>
+        — IMAGINA | DESARROLLA | IMPLEMENTA
+      </span>
+    </div>
+  </footer>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
   <script src="assets/js/app.js"></script>
 </body>
 </html>

@@ -1,41 +1,67 @@
-# Café Club — prototipo de fidelización digital
+<!-- README.md -->
 
-Prototipo multipágina en HTML, Bootstrap 5, CSS y JavaScript para explorar la experiencia antes de conectar un backend.
+# Café Club — Plataforma de Fidelización Digital para Cafeterías
 
-## Archivos
-- `index.html`: inicio y explicación del programa.
-- `registro.html`: formulario de registro.
-- `tarjeta.html`: tarjeta digital de estrellas y beneficios.
-- `premios.html`: catálogo de recompensas.
-- `cafeterias.html`: listado demo de cafeterías y generador visual de QR.
-- `staff.html`: panel de trabajador para buscar clientes y simular una visita.
-- `assets/css/styles.css`: estilos personalizados.
-- `assets/js/app.js`: comportamiento de demostración.
+Café Club es una aplicación web multipágina orientada a la fidelización de clientes en múltiples cafeterías mediante tarjetas digitales y acumulación de estrellas.
 
-## Probar en local
-1. Descarga y descomprime el ZIP.
-2. Abre la carpeta en VS Code.
-3. Recomendado: usa la extensión Live Server y abre `index.html`.
-4. Navega por las páginas desde el menú.
+## 📁 Estructura de Carpetas
 
-También puedes publicar la carpeta en un repositorio GitHub y conectar ese repositorio a Vercel como sitio estático.
+- `index.html` — Página de presentación y bienvenida.
+- `registro.html` — Formulario de registro de clientes (compatible con parámetro `?cafe=slug`).
+- `tarjeta.html` — Tarjeta digital interactiva de 10 estrellas y recompensas.
+- `premios.html` — Listado de recompensas y beneficios de cumpleaños.
+- `cafeterias.html` — Directorio de locales y generador de códigos QR con enlaces públicos.
+- `staff.html` — Panel del trabajador para simulación de visitas y suma de estrellas.
+- `admin.html` — Panel de administración global.
+- `assets/css/styles.css` — Estilos personalizados con identidad visual cálida.
+- `assets/js/app.js` — Lógica en JavaScript vanilla y almacenamiento local (`localStorage`).
 
-## QR
-En `cafeterias.html`, el botón “Mostrar QR de registro” genera un QR para la URL actual y el slug de cafetería. Una vez publicado en Vercel, vuelve a abrir la página pública y genera el QR. Para imprimirlo, comprueba que la URL de destino sea la definitiva.
+---
 
-La generación de QR de esta demo usa un servicio externo (api.qrserver.com). No envía datos personales, pero sí recibe la URL que se codifica. Para producción, puedes generar el QR localmente con una biblioteca JavaScript o usar un generador confiable.
+## 🚀 Cómo abrirlo localmente con Visual Studio Code
 
-## Limitaciones importantes
-- Los datos se guardan en `localStorage`: solo existen en el navegador y dispositivo actual; no se comparten entre clientes o trabajadores.
-- El panel de trabajador no tiene autenticación. No uses el prototipo para administrar clientes reales.
-- El formulario no envía correos y no se conecta a Google Sheets.
-- El enlace a tarjeta es una demo visual, no un acceso de cliente autenticado.
-- Las rutas de ejemplo no son permisos ni controles de seguridad.
+1. Clona o descarga este repositorio en tu computador.
+2. Abre la carpeta del proyecto en **Visual Studio Code**.
+3. Instala la extensión **Live Server** (si no la tienes).
+4. Haz clic derecho sobre `index.html` y selecciona **"Open with Live Server"**.
 
-## Siguiente etapa
-1. Conectar `registro.html` con un backend (por ejemplo, Google Apps Script).
-2. Implementar autenticación real para el personal y autorización por `cafeId`.
-3. Registrar cada visita como movimiento único en el servidor.
-4. Implementar canjes idempotentes, auditoría y límites para evitar estrellas duplicadas.
-5. Configurar correo de forma programada, consentimiento promocional y bajas de suscripción.
-6. Probar cuotas, seguridad, CORS/redirecciones y privacidad antes de publicar para uso real.
+---
+
+## 🌐 Cómo publicarlo en Vercel y GitHub
+
+1. **Subir a GitHub:**
+   - Crea un repositorio nuevo en tu cuenta de GitHub.
+   - Sube todos los archivos raíz (`.html`, carpeta `assets/`, `README.md`).
+2. **Desplegar en Vercel:**
+   - Inicia sesión en [Vercel](https://vercel.com/) con tu cuenta de GitHub.
+   - Haz clic en **"Add New..." > "Project"** e importa el repositorio de Café Club.
+   - Mantén la configuración por defecto de sitio estático y haz clic en **Deploy**.
+
+---
+
+## 📱 Cómo probar las páginas desde un teléfono
+
+Una vez publicado en Vercel, copia la URL pública de tu sitio y ábrela en el navegador de tu teléfono móvil para probar la adaptabilidad responsiva y el funcionamiento táctil.
+
+---
+
+## 🖨️ Cómo generar los QR después de publicar
+
+En la sección **Cafeterías** (`cafeterias.html`), haz clic en el botón **"Ver QR"** de cualquier local. El sistema generará automáticamente el código QR utilizando la URL pública definitiva de Vercel y te permitirá copiar el enlace de registro.
+
+---
+
+## ⚠️ Limitaciones del Prototipo
+
+- Utiliza `localStorage` del navegador, por lo que los datos no se sincronizan entre distintos dispositivos ni usuarios reales.
+- El panel de Staff es una simulación visual y no cuenta con autenticación segura por contraseñas o tokens.
+
+---
+
+## 🔄 Próximos Pasos (Backend & Google Apps Script)
+
+Para llevar este prototipo a producción comercial:
+
+1. Conectar las solicitudes con un script de Google Apps Script (`Google Sheets` como base de datos central).
+2. Implementar autenticación real mediante Google Identity Services (OAuth2).
+3. Configurar automatizaciones con Gmail API para correos de bienvenida y campañas de inactividad.

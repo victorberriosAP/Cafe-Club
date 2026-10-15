@@ -1,107 +1,109 @@
-<!doctype html>
+<!-- registro.html -->
+<!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Registro | Café Club</title>
-  <meta name="description" content="Crea tu tarjeta digital de Café Club y disfruta beneficios en cafeterías participantes.">
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-  <link href="assets/css/styles.css" rel="stylesheet">
-  <script src="https://accounts.google.com/gsi/client" async defer id="googleGsiScript"></script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Registro — Café Club</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="assets/css/styles.css">
+  <!-- Google Identity Services (GIS) para el botón de Google -->
+  <script src="https://accounts.google.com/gsi/client" async defer></script>
 </head>
-<body>
-  <nav class="navbar navbar-dark coffee-nav">
+<body class="bg-light">
+
+  <nav class="navbar navbar-expand-lg navbar-dark sticky-top">
     <div class="container">
       <a class="navbar-brand fw-bold" href="index.html">☕ Café Club</a>
-      <a class="nav-link text-white" href="index.html">Volver al inicio</a>
+      <div class="navbar-nav ms-auto">
+        <a class="nav-link" href="cafeterias.html">Cafeterías</a>
+      </div>
     </div>
   </nav>
 
-  <main class="container py-5">
-    <div class="row justify-content-center">
-      <div class="col-lg-7 col-xl-6">
-        <div class="page-heading text-center mb-4">
-          <span class="eyebrow">BIENVENIDO/A</span>
-          <h1 class="fw-bold mt-2">Crea tu tarjeta digital</h1>
-          <p class="text-secondary">Regístrate una vez y empieza a disfrutar tus beneficios.</p>
+  <main class="container my-5" style="max-width: 600px;">
+    <div class="card border-0 shadow-sm rounded-4 p-4 p-md-5 bg-white">
+      <h1 class="h3 fw-bold text-center mb-2">Crea tu Tarjeta Digital</h1>
+      <p class="text-center text-muted mb-4" id="subtitulo-cafe">Regístrate para comenzar a acumular estrellas.</p>
+
+      <!-- Mensajes de alerta -->
+      <div id="alerta-registro" class="alert d-none" role="alert"></div>
+
+      <!-- Botón de Google Auth -->
+      <div class="text-center mb-4">
+        <div id="g_id_onload"
+             data-client_id="31756994840-b1a3hbpdal3bu5tb2jfq3vb0atvthn24.apps.googleusercontent.com"
+             data-callback="handleCredentialResponse"
+             data-auto_prompt="false">
         </div>
-
-        <div class="form-card">
-          <div class="alert alert-light border small">
-            Inicia sesión con Google para verificar tu correo. Tu registro se guardará en la base compartida de Café Club.
-            El consentimiento para recibir promociones es opcional.
-          </div>
-
-          <section class="mb-4" aria-labelledby="googleLoginTitle">
-            <h2 class="h6 fw-bold" id="googleLoginTitle">1. Verifica tu cuenta</h2>
-            <div id="googleSignInButton" aria-label="Iniciar sesión con Google"></div>
-            <p id="googleSignInStatus" class="small text-secondary mt-2" aria-live="polite">
-              Cargando el inicio de sesión seguro de Google…
-            </p>
-          </section>
-
-          <hr>
-
-          <form id="registrationForm" novalidate>
-            <h2 class="h6 fw-bold mb-3">2. Completa tu tarjeta</h2>
-
-            <div class="mb-3">
-              <label for="cafeId" class="form-label">Cafetería</label>
-              <select class="form-select" id="cafeId" required>
-                <option value="aroma">Café Aroma</option>
-                <option value="central">Café Central</option>
-                <option value="sur">Café del Sur</option>
-              </select>
-              <div class="form-text">Si llegaste desde un QR, la cafetería se seleccionará automáticamente.</div>
-              <div class="invalid-feedback">Selecciona una cafetería.</div>
-            </div>
-
-            <div class="mb-3">
-              <label for="fullName" class="form-label">Nombre completo</label>
-              <input class="form-control" id="fullName" autocomplete="name" placeholder="Ej. Ana Pérez" required minlength="2" maxlength="100">
-              <div class="invalid-feedback">Escribe tu nombre completo (mínimo 2 caracteres).</div>
-            </div>
-
-            <div class="mb-3">
-              <label for="email" class="form-label">Correo electrónico de Google</label>
-              <input type="email" class="form-control" id="email" autocomplete="email" placeholder="Inicia sesión con Google" required readonly>
-              <div class="form-text">Usaremos el correo verificado de la cuenta con la que iniciaste sesión.</div>
-              <div class="invalid-feedback">Inicia sesión con una cuenta de Google válida.</div>
-            </div>
-
-            <div class="mb-3">
-              <label for="birthday" class="form-label">Fecha de nacimiento <span class="text-secondary">(opcional)</span></label>
-              <input type="date" class="form-control" id="birthday">
-              <div class="form-text">Solo si quieres acceder al beneficio de cumpleaños.</div>
-            </div>
-
-            <div class="form-check mb-3">
-              <input class="form-check-input" type="checkbox" id="privacyConsent" required>
-              <label class="form-check-label" for="privacyConsent">He leído el aviso de privacidad y acepto que se usen estos datos para administrar mi tarjeta.</label>
-              <div class="invalid-feedback">Debes aceptar el uso necesario de los datos para continuar.</div>
-            </div>
-
-            <div class="form-check mb-4">
-              <input class="form-check-input" type="checkbox" id="marketingConsent">
-              <label class="form-check-label" for="marketingConsent">Acepto recibir promociones por correo electrónico. (Opcional)</label>
-            </div>
-
-            <button class="btn btn-coffee btn-lg w-100" type="submit">Crear mi tarjeta</button>
-          </form>
-          <div id="registrationMessage" class="mt-3" aria-live="polite"></div>
+        <div class="g_id_signin"
+             data-type="standard"
+             data-size="large"
+             data-theme="outline"
+             data-text="sign_in_with"
+             data-shape="rectangular"
+             data-logo_alignment="left">
+        </div>
+        <div class="d-flex align-items-center my-3">
+          <hr class="flex-grow-1">
+          <span class="px-3 text-muted small">o completa tus datos</span>
+          <hr class="flex-grow-1">
         </div>
       </div>
+
+      <form id="form-registro" novalidate>
+        <input type="hidden" id="cafeId" name="cafe" value="">
+
+        <div class="mb-3">
+          <label for="nombre" class="form-label fw-semibold">Nombre completo</label>
+          <input type="text" class="form-control" id="nombre" required placeholder="Ej. Ana Pérez">
+          <div class="invalid-feedback">Por favor ingresa tu nombre.</div>
+        </div>
+
+        <div class="mb-3">
+          <label for="email" class="form-label fw-semibold">Correo electrónico</label>
+          <input type="email" class="form-control" id="email" required placeholder="tu@correo.com">
+          <div class="invalid-feedback">Ingresa un correo electrónico válido.</div>
+        </div>
+
+        <div class="mb-3">
+          <label for="fechaNacimiento" class="form-label fw-semibold">Fecha de nacimiento <span class="text-muted fw-normal">(opcional para regalo)</span></label>
+          <input type="date" class="form-control" id="fechaNacimiento">
+        </div>
+
+        <div class="mb-3 form-check">
+          <input type="checkbox" class="form-check-input" id="terminos" required>
+          <label class="form-check-label text-muted small" for="terminos">
+            Acepto el aviso de privacidad y las condiciones de la tarjeta de fidelización. *
+          </label>
+          <div class="invalid-feedback">Debes aceptar los términos para continuar.</div>
+        </div>
+
+        <div class="mb-4 form-check">
+          <input type="checkbox" class="form-check-input" id="promos">
+          <label class="form-check-label text-muted small" for="promos">
+            Acepto recibir promociones, beneficios especiales y novedades por correo.
+          </label>
+        </div>
+
+        <button type="submit" class="btn btn-primary w-100 py-2 fw-semibold">Crear mi Tarjeta</button>
+      </form>
     </div>
   </main>
 
-  <footer class="site-footer">
+  <footer class="site-footer mt-auto py-4 bg-white border-top">
     <div class="container d-flex flex-column flex-md-row justify-content-between align-items-center gap-2">
-      <span>© 2026 Café Club</span>
-      <span>Creado por <a href="https://itera-ecru.vercel.app/" target="_blank" rel="noopener noreferrer">ITERA</a> — IMAGINA | DESARROLLA | IMPLEMENTA</span>
+      <span class="text-muted">© 2026 Café Club</span>
+      <span class="text-muted">
+        Creado por
+        <a href="https://itera-ecru.vercel.app/" target="_blank" rel="noopener noreferrer">ITERA</a>
+        — IMAGINA | DESARROLLA | IMPLEMENTA
+      </span>
     </div>
   </footer>
 
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
   <script src="assets/js/app.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
