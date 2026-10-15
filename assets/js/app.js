@@ -48,9 +48,17 @@ function cargarCafeteriasFallback() {
  */
 window.handleCredentialResponse = async function(response) {
   try {
+    console.log("Token recibido de Google:", response.credential);
+
+    // Decodificar el JWT credential de Google
     const base64Url = response.credential.split('.')[1];
     const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
-    const identidad = JSON.parse(decodeURIComponent(atob(base64).split('').map(c => '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2)).join('')));
+    const jsonPayload = decodeURIComponent(atob(base64).split('').map(function(c) {
+      return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
+    }).join(''));
+
+    const identidad = JSON.parse(jsonPayload);
+    console.log("Identidad decodificada:", identidad);
     
     const urlParams = new URLSearchParams(window.location.search);
     const cafeSlug = urlParams.cafe || urlParams.get('cafe') || 'aroma';
@@ -69,7 +77,11 @@ window.handleCredentialResponse = async function(response) {
       method: 'POST',
       body: JSON.stringify(datosEnvio)
     });
-    const resultado = await res.json();
+    
+    const textoRespuesta = await res.text();
+    console.log("Respuesta cruda del Apps Script:", textoRespuesta);
+
+    const resultado = JSON.parse(textoRespuesta);
 
     if (resultado.correcto) {
       localStorage.setItem('cafe_club_email_activo', identidad.email);
@@ -79,9 +91,11 @@ window.handleCredentialResponse = async function(response) {
       mostrarAlertaRegistro('alert-danger', resultado.mensaje);
     }
   } catch (err) {
-    mostrarAlertaRegistro('alert-danger', 'Error al procesar tu cuenta de Google.');
+    console.error("Detalle del error en Google Auth:", err);
+    mostrarAlertaRegistro('alert-danger', 'Error al procesar tu cuenta de Google. Revisa la consola.');
   }
 };
+
 
 function manejarRegistroReal() {
   const formRegistro = document.getElementById('form-registro');
