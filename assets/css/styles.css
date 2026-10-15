@@ -1,0 +1,62 @@
+/* Estilos propios del prototipo Café Club.
+   Bootstrap aporta la cuadrícula, formularios, botones y componentes base. */
+:root {
+  --coffee: #5b321f;
+  --coffee-dark: #392015;
+  --coffee-light: #d8b38b;
+  --cream: #fff8ed;
+  --mint: #dceee5;
+  --ink: #28231f;
+  --muted: #72675f;
+}
+body { color: var(--ink); background: #fffdf9; min-height: 100vh; }
+.coffee-nav { background: var(--coffee-dark); }
+.navbar .nav-link { opacity: .9; }
+.navbar .nav-link:hover { opacity: 1; }
+.hero-section { color: white; background: radial-gradient(circle at 85% 20%, #986c48 0, transparent 30%), linear-gradient(130deg, #392015, #70442b); }
+.eyebrow { color: #a77950; font-size: .76rem; font-weight: 800; letter-spacing: .15em; }
+.hero-section .eyebrow { color: #f0d8bb; }
+.text-coffee-light { color: #f0d8bb; }
+.text-coffee { color: var(--coffee) !important; }
+.btn-coffee { color: white; background: var(--coffee); border-color: var(--coffee); }
+.btn-coffee:hover, .btn-coffee:focus { color: white; background: #432516; border-color: #432516; }
+.btn-outline-coffee { color: var(--coffee); border-color: var(--coffee); }
+.btn-outline-coffee:hover { color: white; background: var(--coffee); }
+.hero-card { max-width: 470px; padding: 2rem; border: 1px solid rgba(255,255,255,.2); border-radius: 1.5rem; background: linear-gradient(145deg, rgba(255,255,255,.17), rgba(255,255,255,.06)); box-shadow: 0 24px 60px rgba(0,0,0,.2); }
+.coffee-cup { display: grid; place-items: center; width: 58px; height: 58px; border-radius: 18px; background: rgba(255,255,255,.17); font-size: 2rem; }
+.star-row { display: flex; flex-wrap: wrap; gap: .35rem; font-size: 1.8rem; color: #ffd166; }
+.star-row .empty { color: rgba(255,255,255,.25); }
+.progress { height: 10px; background: rgba(128, 94, 65, .17); border-radius: 999px; }
+.progress-bar { background: linear-gradient(90deg, #d59b5a, #f5d28c); border-radius: 999px; }
+.reward-strip, .reward-item { display: flex; align-items: center; gap: .9rem; padding: 1rem; border-radius: 1rem; background: rgba(255,255,255,.12); }
+.reward-strip > span { font-size: 1.8rem; }
+.feature-card, .form-card, .stat-card, .cafe-card, .prize-card { border: 1px solid #eee4d9; border-radius: 1.2rem; background: white; box-shadow: 0 8px 25px rgba(54,32,17,.05); }
+.feature-card { padding: 1.5rem; }
+.feature-icon { display: grid; place-items: center; width: 48px; height: 48px; margin-bottom: 1rem; border-radius: 15px; color: var(--coffee); background: var(--cream); font-size: 1.6rem; }
+.soft-section { background: #f8f1e8; }
+.site-footer { padding: 1.25rem 0; margin-top: 2rem; border-top: 1px solid #eee4d9; color: var(--muted); font-size: .85rem; }
+.page-heading { max-width: 600px; margin: auto; }
+.form-card { padding: clamp(1.2rem, 3vw, 2rem); }
+.form-control, .form-select { padding: .75rem .85rem; border-color: #e4d8cc; }
+.form-control:focus, .form-select:focus { border-color: #ad896a; box-shadow: 0 0 0 .2rem rgba(91,50,31,.12); }
+.loyalty-card { padding: clamp(1.4rem, 4vw, 2.5rem); border-radius: 1.5rem; color: white; background: linear-gradient(145deg, #71452d, #3b2116); box-shadow: 0 20px 45px rgba(59,33,22,.2); }
+.star-grid { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: .5rem; }
+.star-dot { display: grid; place-items: center; min-height: 48px; border-radius: .8rem; color: #f3cf86; background: rgba(255,255,255,.12); font-size: 1.55rem; }
+.star-dot.earned { color: #5b321f; background: #f3cf86; }
+.reward-item { background: #fff8ed; }
+.reward-icon { display: grid; place-items: center; width: 48px; height: 48px; border-radius: 14px; background: white; font-size: 1.5rem; }
+.stat-card { padding: 1.25rem; }
+.prize-card, .cafe-card { overflow: hidden; }
+.prize-visual { display: grid; place-items: center; min-height: 180px; background: linear-gradient(140deg, #f9e4c5, #fff7ea); font-size: 4rem; }
+.prize-visual.birthday { background: linear-gradient(140deg, #f6dfe3, #fff2f0); }
+.prize-visual.surprise { background: linear-gradient(140deg, #dceee5, #f4fff8); }
+.cafe-cover { display: grid; place-items: center; min-height: 145px; color: white; font-size: 3.5rem; }
+.cover-one { background: linear-gradient(130deg, #70442b, #c2935d); }
+.cover-two { background: linear-gradient(130deg, #334f43, #91a98a); }
+.cover-three { background: linear-gradient(130deg, #73475b, #c99a83); }
+.qr-preview { text-align: center; padding: .8rem; border-radius: .8rem; background: #faf6f0; overflow-wrap: anywhere; }
+.qr-preview img { display: block; max-width: 180px; width: 100%; height: auto; margin: .5rem auto; }
+@media (max-width: 575px) {
+  .hero-card { padding: 1.35rem; }
+  .hero-section h1 { font-size: 2.6rem; }
+}

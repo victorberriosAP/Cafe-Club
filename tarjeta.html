@@ -1,0 +1,35 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Mi tarjeta | Café Club</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"><link href="assets/css/styles.css" rel="stylesheet">
+</head>
+<body>
+  <nav class="navbar navbar-dark coffee-nav"><div class="container"><a class="navbar-brand fw-bold" href="index.html">☕ Café Club</a><a class="nav-link text-white" href="registro.html">Crear tarjeta</a></div></nav>
+  <main class="container py-5">
+    <div class="text-center mb-4"><span class="eyebrow">TU ESPACIO PERSONAL</span><h1 class="fw-bold mt-2">Mi tarjeta</h1><p class="text-secondary">Consulta tu progreso y los beneficios disponibles.</p></div>
+    <div class="row justify-content-center g-4">
+      <div class="col-lg-7">
+        <section class="loyalty-card">
+          <div class="d-flex justify-content-between align-items-start"><div><div class="small text-uppercase opacity-75">Café Club · <span id="cardCafe">Café Aroma</span></div><h2 class="mt-2" id="cardName">¡Hola, Ana!</h2><p class="mb-0 opacity-75">Cada visita te acerca a una recompensa.</p></div><div class="coffee-cup">☕</div></div>
+          <div class="d-flex justify-content-between align-items-end mt-4"><div><div class="display-5 fw-bold"><span id="starCount">6</span><span class="fs-4 opacity-75"> / 10</span></div><div>estrellas acumuladas</div></div><span class="badge rounded-pill text-bg-light text-coffee" id="progressLabel">60% completado</span></div>
+          <div class="star-grid mt-3" id="starGrid" aria-label="Estrellas de fidelización"></div>
+          <div class="progress mt-3"><div id="cardProgress" class="progress-bar" style="width:60%"></div></div>
+          <div class="mt-3 small" id="nextReward">Te faltan 4 estrellas para un café gratis.</div>
+        </section>
+        <div class="alert alert-info mt-3 small">Vista demo. El número de estrellas se puede simular desde el panel de prueba; todavía no hay validación real del servidor.</div>
+      </div>
+      <div class="col-lg-5">
+        <div class="form-card h-100"><h4 class="fw-bold">Tus beneficios</h4>
+          <div class="reward-item mt-3"><div class="reward-icon">☕</div><div class="flex-grow-1"><strong>Café gratis</strong><div class="small text-secondary">Al completar 10 estrellas</div><span class="badge text-bg-secondary mt-1" id="coffeeRewardStatus">En progreso</span></div></div>
+          <div class="reward-item mt-3"><div class="reward-icon">🎂</div><div class="flex-grow-1"><strong>Beneficio de cumpleaños</strong><div class="small text-secondary">Pastel y café, según condiciones del local.</div><span class="badge text-bg-light mt-1">Por confirmar</span></div></div>
+          <a href="premios.html" class="btn btn-outline-coffee w-100 mt-4">Ver premios</a>
+        </div>
+      </div>
+    </div>
+  </main>
+  <footer class="site-footer"><div class="container">Cuida tu tarjeta: los premios se canjean con el equipo de la cafetería.</div></footer>
+  <script src="assets/js/app.js"></script>
+</body>
+</html>
