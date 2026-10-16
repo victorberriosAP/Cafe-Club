@@ -2,8 +2,7 @@
  * Café Club — Lógica frontend para multisucursal y Google Sheets / Apps Script
  */
 
-// REEMPLAZA ESTA URL CON TU URL REAL DE GOOGLE APPS SCRIPT (/exec)
-const API_URL = 'https://script.google.com/macros/s/AKfycbwSVgDzlYoT2DT5V4JjPN73TOQVnlV3Ea9-TWYxfmxuZ8BHJEoda-ohiFNCNGk7lgos/exec';
+const API_URL = 'https://script.google.com/macros/s/TU_URL_DE_APPS_SCRIPT_AQUI/exec';
 
 document.addEventListener('DOMContentLoaded', () => {
   manejarRegistro();
@@ -274,7 +273,7 @@ async function manejarStaff() {
         const res = await fetch(API_URL, {
           method: 'POST',
           body: JSON.stringify({
-            accion: 'registrarVisita',
+            accion: 'registrarVisitaStaff',
             clienteId: clienteCache.clienteId,
             cafeteriaId: selectSucursal.value
           })
@@ -286,8 +285,7 @@ async function manejarStaff() {
           alertaStaff.textContent = '¡Estrella agregada con éxito en Google Sheets!';
           alertaStaff.classList.remove('d-none');
           
-          // Actualizar vista local de estrellas
-          clienteCache.estrellas = (clienteCache.estrellas + 1) % 10;
+          clienteCache.estrellas = data.estrellasActuales;
           document.getElementById('staff-cliente-estrellas').textContent = clienteCache.estrellas;
         } else {
           alertaStaff.className = 'alert alert-danger';
@@ -306,12 +304,43 @@ async function renderizarAdmin() {
   if (!totalSuc) return;
 
   try {
-    const res = await fetch(`${API_URL}?accion=obtenerCafeterias`);
+    const res = await fetch(`${API_URL}?accion=obtenerAdminDatos`);
     const data = await res.json();
-    if (data.correcto && data.cafeterias) {
-      totalSuc.textContent = data.cafeterias.length;
+
+    if (data.correcto) {
+      document.getElementById('admin-total-sucursales').textContent = data.cafeterias.length;
+      document.getElementById('admin-total-clientes').textContent = data.clientes.length;
+      document.getElementById('admin-total-visitas').textContent = data.visitas.length;
+
+      const tbodySuc = document.getElementById('admin-tabla-sucursales');
+      if (tbodySuc && data.cafeterias.length > 0) {
+        tbodySuc.innerHTML = '';
+        data.cafeterias.forEach(suc => {
+          const tr = document.createElement('tr');
+          tr.innerHTML = `
+            <td><code>${suc.cafeteriaId || suc.id || '-'}</code></td>
+            <td class="fw-semibold">${suc.nombre || '-'}</td>
+            <td><code>${suc.slug || suc.direccion || '-'}</code></td>
+          `;
+          tbodySuc.appendChild(tr);
+        });
+      }
+
+      const tbodyCli = document.getElementById('admin-tabla-clientes');
+      if (tbodyCli && data.clientes.length > 0) {
+        tbodyCli.innerHTML = '';
+        data.clientes.slice(-5).reverse().forEach(cli => {
+          const tr = document.createElement('tr');
+          tr.innerHTML = `
+            <td class="fw-semibold">${cli.nombre || '-'}</td>
+            <td>${cli.email || '-'}</td>
+            <td><small class="text-muted">${cli.fechaRegistro ? new Date(cli.fechaRegistro).toLocaleDateString() : '-'}</small></td>
+          `;
+          tbodyCli.appendChild(tr);
+        });
+      }
     }
   } catch (e) {
-    console.error('Error en admin');
+    console.error('Error al cargar datos del panel admin:', e);
   }
 }
