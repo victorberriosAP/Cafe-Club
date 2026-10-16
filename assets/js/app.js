@@ -15,6 +15,7 @@ document.addEventListener('DOMContentLoaded', () => {
 /**
  * Función centralizada para enviar peticiones POST a Google Apps Script y evitar CORS
  */
+/*
 async function apiPost(payload) {
   try {
     const res = await fetch(API_URL, {
@@ -27,6 +28,39 @@ async function apiPost(payload) {
     return { correcto: false, mensaje: 'Error de conexión con el servidor.' };
   }
 }
+*/
+
+async function apiPost(payload) {
+  try {
+    console.log('Enviando petición a Google Apps Script:', payload);
+
+    const res = await fetch(API_URL, {
+      method: 'POST',
+      body: JSON.stringify(payload)
+    });
+
+    console.log('Estado HTTP:', res.status);
+    console.log('URL final:', res.url);
+
+    const texto = await res.text();
+    console.log('Respuesta recibida:', texto);
+
+    if (!res.ok) {
+      throw new Error(`Error HTTP ${res.status}`);
+    }
+
+    return JSON.parse(texto);
+
+  } catch (error) {
+    console.error('Error real de conexión con Google Sheets:', error);
+
+    return {
+      correcto: false,
+      mensaje: error.message || 'Error de conexión con el servidor.'
+    };
+  }
+}
+
 
 /**
  * Callback de Google Sign-In (OAuth)
