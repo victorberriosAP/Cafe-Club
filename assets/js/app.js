@@ -1,11 +1,11 @@
-/* assets/js/app.js */
-
 /**
- * Café Club — Lógica frontend para multisucursal y Google Sheets / localStorage
+ * Café Club — Lógica frontend para multisucursal y Google Sheets / Apps Script
  */
 
+// REEMPLAZA ESTA URL CON TU URL REAL DE GOOGLE APPS SCRIPT (/exec)
+const API_URL = 'https://script.google.com/macros/s/AKfycbwSVgDzlYoT2DT5V4JjPN73TOQVnlV3Ea9-TWYxfmxuZ8BHJEoda-ohiFNCNGk7lgos/exec';
+
 document.addEventListener('DOMContentLoaded', () => {
-  inicializarDatosDemo();
   manejarRegistro();
   renderizarTarjeta();
   renderizarSucursales();
@@ -13,63 +13,54 @@ document.addEventListener('DOMContentLoaded', () => {
   renderizarAdmin();
 });
 
-const SUCURSALES_DATA = [
-  { id: 'suc_providencia', nombre: 'Café Club — Providencia', slug: 'providencia', direccion: 'Av. Providencia 1234' },
-  { id: 'suc_santiago', nombre: 'Café Club — Centro Histórico', slug: 'centro', direccion: 'Calle Huérfanos 567' },
-  { id: 'suc_vitacura', nombre: 'Café Club — Vitacura', slug: 'vitacura', direccion: 'Vitacura 4000' }
-];
-
-function inicializarDatosDemo() {
-  if (!localStorage.getItem('cafe_club_clientes')) {
-    localStorage.setItem('cafe_club_clientes', JSON.stringify([]));
-  }
-  if (!localStorage.getItem('cafe_club_visitas')) {
-    localStorage.setItem('cafe_club_visitas', JSON.stringify([]));
-  }
-}
-
 /**
  * Callback de Google Sign-In (OAuth)
  */
-window.handleGoogleSignIn = function(response) {
+window.handleGoogleSignIn = async function(response) {
   try {
     const base64Url = response.credential.split('.')[1];
     const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
     const jsonPayload = decodeURIComponent(atob(base64).split('').map(c => '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2)).join(''));
     const identidad = JSON.parse(jsonPayload);
 
-    let clientes = JSON.parse(localStorage.getItem('cafe_club_clientes')) || [];
-    let clienteExistente = clientes.find(c => c.email === identidad.email);
+    const datosEnvio = {
+      accion: 'registrarCliente',
+      googleSub: identidad.sub,
+      nombre: identidad.name,
+      email: identidad.email,
+      fechaNacimiento: ''
+    };
 
-    if (clienteExistente) {
-      localStorage.setItem('cafe_club_activo', JSON.stringify(clienteExistente));
-    } else {
-      const nuevoCliente = {
-        clienteId: 'cli_' + Math.random().toString(36).substr(2, 9),
-        googleSub: identidad.sub,
-        nombre: identidad.name,
-        email: identidad.email,
-        fechaNacimiento: '',
-        estrellas: 0,
-        fechaRegistro: new Date().toISOString()
-      };
-      clientes.push(nuevoCliente);
-      localStorage.setItem('cafe_club_clientes', JSON.stringify(clientes));
-      localStorage.setItem('cafe_club_activo', JSON.stringify(nuevoCliente));
-    }
+    const res = await fetch(API_URL, {
+      method: 'POST',
+      body: JSON.stringify(datosEnvio)
+    });
+    const resultado = await res.json();
 
     const alerta = document.getElementById('alerta-registro');
-    if (alerta) {
-      alerta.className = 'alert alert-success';
-      alerta.textContent = `¡Bienvenido/a ${identidad.name}! Redirigiendo a tu tarjeta...`;
-      alerta.classList.remove('d-none');
+    if (resultado.correcto) {
+      localStorage.setItem('cafe_club_email', identidad.email);
+      if (alerta) {
+        alerta.className = 'alert alert-success';
+        alerta.textContent = `¡Bienvenido/a ${identidad.name}! Redirigiendo a tu tarjeta...`;
+        alerta.classList.remove('d-none');
+      }
+      setTimeout(() => window.location.href = 'tarjeta.html', 1500);
+    } else {
+      if (alerta) {
+        alerta.className = 'alert alert-danger';
+        alerta.textContent = resultado.mensaje;
+        alerta.classList.remove('d-none');
+      }
     }
-
-    setTimeout(() => {
-      window.location.href = 'tarjeta.html';
-    }, 1500);
   } catch (error) {
     console.error('Error Google OAuth:', error);
+    const alerta = document.getElementById('alerta-registro');
+    if (alerta) {
+      alerta.className = 'alert alert-danger';
+      alerta.textContent = 'Error al procesar la cuenta de Google.';
+      alerta.classList.remove('d-none');
+    }
   }
 };
 
@@ -77,7 +68,7 @@ function manejarRegistro() {
   const formRegistro = document.getElementById('form-registro');
   if (!formRegistro) return;
 
-  formRegistro.addEventListener('submit', (e) => {
+  formRegistro.addEventListener('submit', async (e) => {
     e.preventDefault();
 
     const nombre = document.getElementById('nombre').value.trim();
@@ -93,133 +84,147 @@ function manejarRegistro() {
       return;
     }
 
-    let clientes = JSON.parse(localStorage.getItem('cafe_club_clientes')) || [];
-    let clienteExistente = clientes.find(c => c.email === email);
+    try {
+      const res = await fetch(API_URL, {
+        method: 'POST',
+        body: JSON.stringify({
+          accion: 'registrarCliente',
+          nombre,
+          email,
+          fechaNacimiento
+        })
+      });
+      const data = await res.json();
 
-    if (clienteExistente) {
-      localStorage.setItem('cafe_club_activo', JSON.stringify(clienteExistente));
-    } else {
-      const nuevoCliente = {
-        clienteId: 'cli_' + Math.random().toString(36).substr(2, 9),
-        nombre,
-        email,
-        fechaNacimiento,
-        estrellas: 0,
-        fechaRegistro: new Date().toISOString()
-      };
-      clientes.push(nuevoCliente);
-      localStorage.setItem('cafe_club_clientes', JSON.stringify(clientes));
-      localStorage.setItem('cafe_club_activo', JSON.stringify(nuevoCliente));
+      if (data.correcto) {
+        localStorage.setItem('cafe_club_email', email);
+        alerta.className = 'alert alert-success';
+        alerta.textContent = '¡Registro exitoso! Redirigiendo a tu tarjeta digital...';
+        alerta.classList.remove('d-none');
+        setTimeout(() => window.location.href = 'tarjeta.html', 1500);
+      } else {
+        alerta.className = 'alert alert-danger';
+        alerta.textContent = data.mensaje;
+        alerta.classList.remove('d-none');
+      }
+    } catch (err) {
+      alerta.className = 'alert alert-danger';
+      alerta.textContent = 'Error de conexión con el servidor.';
+      alerta.classList.remove('d-none');
     }
-
-    alerta.className = 'alert alert-success';
-    alerta.textContent = '¡Registro exitoso! Redirigiendo a tu tarjeta digital...';
-    alerta.classList.remove('d-none');
-
-    setTimeout(() => {
-      window.location.href = 'tarjeta.html';
-    }, 1500);
   });
 }
 
-function renderizarTarjeta() {
+async function renderizarTarjeta() {
   const sinTarjeta = document.getElementById('sin-tarjeta');
   const conTarjeta = document.getElementById('con-tarjeta');
   if (!sinTarjeta || !conTarjeta) return;
 
-  const clienteActivo = JSON.parse(localStorage.getItem('cafe_club_activo'));
+  const email = localStorage.getItem('cafe_club_email');
 
-  if (!clienteActivo) {
+  if (!email) {
     sinTarjeta.classList.remove('d-none');
     conTarjeta.classList.add('d-none');
     return;
   }
 
-  sinTarjeta.classList.add('d-none');
-  conTarjeta.classList.remove('d-none');
+  try {
+    const res = await fetch(`${API_URL}?accion=consultarCliente&email=${encodeURIComponent(email)}`);
+    const data = await res.json();
 
-  document.getElementById('tarjeta-nombre').textContent = clienteActivo.nombre;
-  document.getElementById('tarjeta-estrellas-num').textContent = clienteActivo.estrellas;
+    if (data.correcto && data.cliente) {
+      sinTarjeta.classList.add('d-none');
+      conTarjeta.classList.remove('d-none');
 
-  const grid = document.getElementById('tarjeta-estrellas-grid');
-  grid.innerHTML = '';
-  for (let i = 1; i <= 10; i++) {
-    const slot = document.createElement('div');
-    slot.className = `star-slot ${i <= clienteActivo.estrellas ? 'filled' : ''}`;
-    slot.innerHTML = i <= clienteActivo.estrellas ? '⭐' : i;
-    grid.appendChild(slot);
-  }
+      document.getElementById('tarjeta-nombre').textContent = data.cliente.nombre;
+      document.getElementById('tarjeta-estrellas-num').textContent = data.cliente.estrellas;
 
-  const estadoReq = document.getElementById('tarjeta-estado-recompensa');
-  if (clienteActivo.estrellas >= 10) {
-    estadoReq.textContent = '🎉 ¡Felicidades! Tienes un café gratis disponible en cualquier sucursal.';
-  } else {
-    estadoReq.textContent = `¡Te faltan ${10 - clienteActivo.estrellas} estrellas para tu café gratis!`;
+      const grid = document.getElementById('tarjeta-estrellas-grid');
+      grid.innerHTML = '';
+      for (let i = 1; i <= 10; i++) {
+        const slot = document.createElement('div');
+        slot.className = `star-slot ${i <= data.cliente.estrellas ? 'filled' : ''}`;
+        slot.innerHTML = i <= data.cliente.estrellas ? '⭐' : i;
+        grid.appendChild(slot);
+      }
+
+      const estadoReq = document.getElementById('tarjeta-estado-recompensa');
+      if (data.cliente.estrellas >= 10) {
+        estadoReq.textContent = '🎉 ¡Felicidades! Tienes un café gratis disponible en cualquier sucursal.';
+      } else {
+        estadoReq.textContent = `¡Te faltan ${10 - data.cliente.estrellas} estrellas para tu café gratis!`;
+      }
+    } else {
+      sinTarjeta.classList.remove('d-none');
+      conTarjeta.classList.add('d-none');
+    }
+  } catch (e) {
+    console.error('Error al obtener la tarjeta:', e);
   }
 
   const btnCerrar = document.getElementById('btn-cerrar-sesion');
   if (btnCerrar) {
     btnCerrar.addEventListener('click', () => {
-      localStorage.removeItem('cafe_club_activo');
+      localStorage.removeItem('cafe_club_email');
       location.reload();
     });
   }
 }
 
-function renderizarSucursales() {
+async function renderizarSucursales() {
   const contenedor = document.getElementById('lista-sucursales');
   if (!contenedor) return;
 
-  contenedor.innerHTML = '';
-  const urlBase = window.location.origin + window.location.pathname.replace('cafeterias.html', '');
-  const urlRegistroUniversal = `${urlBase}registro.html`;
+  try {
+    const res = await fetch(`${API_URL}?accion=obtenerCafeterias`);
+    const data = await res.json();
 
-  // QR Universal
-  const imgQR = document.getElementById('imagen-qr-universal');
-  const inputUrl = document.getElementById('input-url-qr');
-  if (imgQR && inputUrl) {
-    inputUrl.value = urlRegistroUniversal;
-    imgQR.src = `https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${encodeURIComponent(urlRegistroUniversal)}`;
+    if (data.correcto && data.cafeterias && data.cafeterias.length > 0) {
+      contenedor.innerHTML = '';
+      data.cafeterias.forEach(suc => {
+        const nombreSuc = suc.nombre || 'Café Club';
+        const direccionSuc = suc.direccion || 'Dirección no especificada';
+        const mapsUrl = `https://maps.google.com/?q=${encodeURIComponent(nombreSuc + ' ' + direccionSuc)}`;
+
+        const col = document.createElement('div');
+        col.className = 'col-md-4';
+        col.innerHTML = `
+          <div class="card border-0 shadow-sm rounded-4 p-4 h-100 bg-white d-flex flex-column">
+            <h3 class="h5 fw-bold mb-2">${nombreSuc}</h3>
+            <p class="text-muted small mb-0">
+              📍 <a href="${mapsUrl}" target="_blank" rel="noopener noreferrer" class="text-decoration-none text-muted fw-medium">${direccionSuc}</a>
+            </p>
+          </div>
+        `;
+        contenedor.appendChild(col);
+      });
+    } else {
+      contenedor.innerHTML = `<div class="col-12 text-center text-muted"><p>No hay sucursales disponibles en este momento.</p></div>`;
+    }
+  } catch (e) {
+    contenedor.innerHTML = `<div class="col-12 text-center text-danger"><p>Error al conectar con Google Sheets.</p></div>`;
   }
-
-  const btnCopiar = document.getElementById('btn-copiar-enlace');
-  if (btnCopiar) {
-    btnCopiar.addEventListener('click', () => {
-      inputUrl.select();
-      navigator.clipboard.writeText(inputUrl.value);
-      const toast = document.getElementById('toast-copiado');
-      toast.classList.remove('d-none');
-      setTimeout(() => toast.classList.add('d-none'), 2000);
-    });
-  }
-
-  SUCURSALES_DATA.forEach(suc => {
-    const col = document.createElement('div');
-    col.className = 'col-md-4';
-    col.innerHTML = `
-      <div class="card border-0 shadow-sm rounded-4 p-4 h-100 bg-white d-flex flex-column">
-        <h3 class="h5 fw-bold mb-2">${suc.nombre}</h3>
-        <p class="text-muted small mb-3">📍 ${suc.direccion}</p>
-        <div class="mt-auto">
-          <a href="registro.html" class="btn btn-primary btn-sm w-100">Registrarse con QR Universal</a>
-        </div>
-      </div>
-    `;
-    contenedor.appendChild(col);
-  });
 }
 
-function manejarStaff() {
+async function manejarStaff() {
   const selectSucursal = document.getElementById('staff-select-sucursal');
   if (!selectSucursal) return;
 
-  selectSucursal.innerHTML = '';
-  SUCURSALES_DATA.forEach(suc => {
-    const opt = document.createElement('option');
-    opt.value = suc.id;
-    opt.textContent = suc.nombre;
-    selectSucursal.appendChild(opt);
-  });
+  try {
+    const res = await fetch(`${API_URL}?accion=obtenerCafeterias`);
+    const data = await res.json();
+    if (data.correcto && data.cafeterias) {
+      selectSucursal.innerHTML = '';
+      data.cafeterias.forEach(suc => {
+        const opt = document.createElement('option');
+        opt.value = suc.cafeteriaId || suc.id;
+        opt.textContent = suc.nombre;
+        selectSucursal.appendChild(opt);
+      });
+    }
+  } catch (e) {
+    console.error('Error cargando sucursales para staff');
+  }
 
   const btnBuscar = document.getElementById('staff-btn-buscar');
   const inputBuscar = document.getElementById('staff-input-buscar');
@@ -230,102 +235,83 @@ function manejarStaff() {
 
   let clienteCache = null;
 
-  btnBuscar.addEventListener('click', () => {
-    const query = inputBuscar.value.trim().toLowerCase();
-    if (!query) return;
+  if (btnBuscar) {
+    btnBuscar.addEventListener('click', async () => {
+      const email = inputBuscar.value.trim();
+      if (!email) return;
 
-    let clientes = JSON.parse(localStorage.getItem('cafe_club_clientes')) || [];
-    clienteCache = clientes.find(c => c.nombre.toLowerCase().includes(query) || c.email.toLowerCase().includes(query));
+      try {
+        const res = await fetch(`${API_URL}?accion=consultarCliente&email=${encodeURIComponent(email)}`);
+        const data = await res.json();
 
-    if (clienteCache) {
-      document.getElementById('staff-cliente-nombre').textContent = clienteCache.nombre;
-      document.getElementById('staff-cliente-email').textContent = clienteCache.email;
-      document.getElementById('staff-cliente-estrellas').textContent = clienteCache.estrellas;
-      
-      resultadoCliente.classList.remove('d-none');
-      estadoVacio.classList.add('d-none');
-      alertaStaff.classList.add('d-none');
-    } else {
-      resultadoCliente.classList.add('d-none');
-      estadoVacio.classList.remove('d-none');
-      alertaStaff.className = 'alert alert-warning';
-      alertaStaff.textContent = 'Cliente no encontrado.';
-      alertaStaff.classList.remove('d-none');
-    }
-  });
-
-  btnSumar.addEventListener('click', () => {
-    if (!clienteCache) return;
-
-    if (clienteCache.estrellas < 10) {
-      clienteCache.estrellas += 1;
-    } else {
-      clienteCache.estrellas = 1;
-    }
-
-    let clientes = JSON.parse(localStorage.getItem('cafe_club_clientes')) || [];
-    clientes = clientes.map(c => c.clienteId === clienteCache.clienteId ? clienteCache : c);
-    localStorage.setItem('cafe_club_clientes', JSON.stringify(clientes));
-
-    let activo = JSON.parse(localStorage.getItem('cafe_club_activo'));
-    if (activo && activo.clienteId === clienteCache.clienteId) {
-      localStorage.setItem('cafe_club_activo', JSON.stringify(clienteCache));
-    }
-
-    let visitas = JSON.parse(localStorage.getItem('cafe_club_visitas')) || [];
-    const sucActualId = selectSucursal.value;
-    const sucObj = SUCURSALES_DATA.find(s => s.id === sucActualId);
-
-    visitas.unshift({
-      fechaHora: new Date().toLocaleString(),
-      clienteNombre: clienteCache.nombre,
-      sucursalNombre: sucObj ? sucObj.nombre : 'Sucursal',
-      accion: '+1 Estrella (Visita)'
+        if (data.correcto && data.cliente) {
+          clienteCache = data.cliente;
+          document.getElementById('staff-cliente-nombre').textContent = data.cliente.nombre;
+          document.getElementById('staff-cliente-email').textContent = data.cliente.email;
+          document.getElementById('staff-cliente-estrellas').textContent = data.cliente.estrellas;
+          
+          resultadoCliente.classList.remove('d-none');
+          estadoVacio.classList.add('d-none');
+          alertaStaff.classList.add('d-none');
+        } else {
+          resultadoCliente.classList.add('d-none');
+          estadoVacio.classList.remove('d-none');
+          alertaStaff.className = 'alert alert-warning';
+          alertaStaff.textContent = 'Cliente no encontrado.';
+          alertaStaff.classList.remove('d-none');
+        }
+      } catch (err) {
+        console.error('Error al buscar cliente:', err);
+      }
     });
-    localStorage.setItem('cafe_club_visitas', JSON.stringify(visitas));
-
-    document.getElementById('staff-cliente-estrellas').textContent = clienteCache.estrellas;
-    alertaStaff.className = 'alert alert-success';
-    alertaStaff.textContent = `¡Estrella agregada con éxito para ${clienteCache.nombre}! Total: ${clienteCache.estrellas}/10`;
-    alertaStaff.classList.remove('d-none');
-
-    renderizarHistorialStaff();
-  });
-
-  renderizarHistorialStaff();
-}
-
-function renderizarHistorialStaff() {
-  const tbody = document.getElementById('staff-tabla-historial');
-  if (!tbody) return;
-
-  const visitas = JSON.parse(localStorage.getItem('cafe_club_visitas')) || [];
-  if (visitas.length === 0) {
-    tbody.innerHTML = `<tr><td colspan="4" class="text-center text-muted py-3">No hay registros recientes en esta sesión.</td></tr>`;
-    return;
   }
 
-  tbody.innerHTML = '';
-  visitas.slice(0, 10).forEach(v => {
-    const tr = document.createElement('tr');
-    tr.innerHTML = `
-      <td><small class="text-muted">${v.fechaHora}</small></td>
-      <td class="fw-semibold">${v.clienteNombre}</td>
-      <td>${v.sucursalNombre}</td>
-      <td><span class="badge bg-success">${v.accion}</span></td>
-    `;
-    tbody.appendChild(tr);
-  });
+  if (btnSumar) {
+    btnSumar.addEventListener('click', async () => {
+      if (!clienteCache) return;
+
+      try {
+        const res = await fetch(API_URL, {
+          method: 'POST',
+          body: JSON.stringify({
+            accion: 'registrarVisita',
+            clienteId: clienteCache.clienteId,
+            cafeteriaId: selectSucursal.value
+          })
+        });
+        const data = await res.json();
+
+        if (data.correcto) {
+          alertaStaff.className = 'alert alert-success';
+          alertaStaff.textContent = '¡Estrella agregada con éxito en Google Sheets!';
+          alertaStaff.classList.remove('d-none');
+          
+          // Actualizar vista local de estrellas
+          clienteCache.estrellas = (clienteCache.estrellas + 1) % 10;
+          document.getElementById('staff-cliente-estrellas').textContent = clienteCache.estrellas;
+        } else {
+          alertaStaff.className = 'alert alert-danger';
+          alertaStaff.textContent = data.mensaje;
+          alertaStaff.classList.remove('d-none');
+        }
+      } catch (err) {
+        console.error('Error al registrar visita:', err);
+      }
+    });
+  }
 }
 
-function renderizarAdmin() {
+async function renderizarAdmin() {
   const totalSuc = document.getElementById('admin-total-sucursales');
   if (!totalSuc) return;
 
-  totalSuc.textContent = SUCURSALES_DATA.length;
-  const clientes = JSON.parse(localStorage.getItem('cafe_club_clientes')) || [];
-  const visitas = JSON.parse(localStorage.getItem('cafe_club_visitas')) || [];
-
-  document.getElementById('admin-total-clientes').textContent = clientes.length;
-  document.getElementById('admin-total-visitas').textContent = visitas.length;
+  try {
+    const res = await fetch(`${API_URL}?accion=obtenerCafeterias`);
+    const data = await res.json();
+    if (data.correcto && data.cafeterias) {
+      totalSuc.textContent = data.cafeterias.length;
+    }
+  } catch (e) {
+    console.error('Error en admin');
+  }
 }

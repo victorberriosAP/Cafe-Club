@@ -4,7 +4,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Sucursales y QR — Café Club</title>
+  <title>Sucursales — Café Club</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="assets/css/styles.css">
@@ -20,7 +20,7 @@
       <div class="collapse navbar-collapse" id="navbarNav">
         <ul class="navbar-nav ms-auto">
           <li class="nav-item"><a class="nav-link" href="index.html">Inicio</a></li>
-          <li class="nav-item"><a class="nav-link active" href="cafeterias.html">Sucursales & QR</a></li>
+          <li class="nav-item"><a class="nav-link active" href="cafeterias.html">Sucursales</a></li>
           <li class="nav-item"><a class="nav-link" href="tarjeta.html">Mi Tarjeta</a></li>
           <li class="nav-item"><a class="nav-link" href="premios.html">Premios</a></li>
           <li class="nav-item"><a class="nav-link" href="staff.html">Staff</a></li>
@@ -32,25 +32,17 @@
   <main class="container my-5">
     <div class="text-center mb-5">
       <h1 class="fw-bold">Nuestras Sucursales</h1>
-      <p class="text-muted">Visita cualquiera de nuestros locales en tu comuna o barrio y genera el código QR universal de registro.</p>
+      <p class="text-muted">Encuentra tu local más cercano y visita cualquiera de nuestras ubicaciones para acumular estrellas.</p>
     </div>
 
-    <!-- Generador de QR Universal -->
-    <div class="card border-0 shadow-sm rounded-4 p-4 p-md-5 bg-white mb-5 text-center" style="max-width: 600px; margin: 0 auto;">
-      <h2 class="h4 fw-bold mb-3">Código QR Universal de Registro</h2>
-      <p class="text-muted small mb-4">Escanea o comparte este código QR único para registrarte en Café Club desde cualquier sucursal.</p>
-      <div class="bg-light p-4 rounded-4 d-inline-block mb-3 border">
-        <img id="imagen-qr-universal" src="" alt="QR Universal" class="img-fluid" style="width: 200px; height: 200px;">
-      </div>
-      <div class="input-group mb-2">
-        <input type="text" id="input-url-qr" class="form-control form-control-sm text-muted" readonly>
-        <button class="btn btn-outline-secondary btn-sm" type="button" id="btn-copiar-enlace">Copiar Enlace</button>
-      </div>
-      <div id="toast-copiado" class="text-success small d-none">¡Enlace copiado al portapapeles!</div>
-    </div>
-
+    <!-- Contenedor donde se cargarán las sucursales desde Google Sheets -->
     <div class="row g-4" id="lista-sucursales">
-      <!-- Generado por JavaScript -->
+      <div class="col-12 text-center py-5">
+        <div class="spinner-border text-dark" role="status">
+          <span class="visually-hidden">Cargando sucursales...</span>
+        </div>
+        <p class="text-muted mt-2">Cargando sucursales desde Google Sheets...</p>
+      </div>
     </div>
   </main>
 
