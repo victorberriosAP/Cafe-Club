@@ -2,7 +2,7 @@
  * Café Club — Lógica frontend para multisucursal y Google Sheets / Apps Script
  */
 
-const API_URL = 'https://script.google.com/macros/s/TU_URL_DE_APPS_SCRIPT_AQUI/exec';
+const API_URL = 'https://script.google.com/macros/s/AKfycbwSVgDzlYoT2DT5V4JjPN73TOQVnlV3Ea9-TWYxfmxuZ8BHJEoda-ohiFNCNGk7lgos/exec';
 
 document.addEventListener('DOMContentLoaded', () => {
   manejarRegistro();
