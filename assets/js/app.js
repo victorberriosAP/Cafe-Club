@@ -1,4 +1,5 @@
 /**
+ * assets/js/app.js
  * Café Club — Lógica frontend para multisucursal y Google Sheets / Apps Script (Vía POST anti-CORS)
  */
 
@@ -15,21 +16,6 @@ document.addEventListener('DOMContentLoaded', () => {
 /**
  * Función centralizada para enviar peticiones POST a Google Apps Script y evitar CORS
  */
-/*
-async function apiPost(payload) {
-  try {
-    const res = await fetch(API_URL, {
-      method: 'POST',
-      body: JSON.stringify(payload)
-    });
-    return await res.json();
-  } catch (error) {
-    console.error('Error en API:', error);
-    return { correcto: false, mensaje: 'Error de conexión con el servidor.' };
-  }
-}
-*/
-
 async function apiPost(payload) {
   try {
     console.log('Enviando petición a Google Apps Script:', payload);
@@ -60,7 +46,6 @@ async function apiPost(payload) {
     };
   }
 }
-
 
 /**
  * Callback de Google Sign-In (OAuth)
@@ -334,14 +319,38 @@ async function renderizarAdmin() {
     if (tbodyCli && data.clientes.length > 0) {
       tbodyCli.innerHTML = '';
       data.clientes.slice(-5).reverse().forEach(cli => {
+        const fechaNacVal = cli.fechaNacimiento || '';
+        const estadoVal = cli.estado || 'activo';
+        
         const tr = document.createElement('tr');
         tr.innerHTML = `
           <td class="fw-semibold">${cli.nombre || '-'}</td>
           <td>${cli.email || '-'}</td>
-          <td><small class="text-muted">${cli.fechaRegistro ? new Date(cli.fechaRegistro).toLocaleDateString() : '-'}</small></td>
+          <td>${formatearFecha(fechaNacVal)}</td>
+          <td><span class="badge bg-${estadoVal === 'activo' ? 'success' : 'secondary'}">${estadoVal}</span></td>
         `;
         tbodyCli.appendChild(tr);
       });
     }
   }
+}
+
+// Formateador Fecha (DD/MM/YYYY)
+function formatearFecha(fechaStr) {
+  if (!fechaStr) return '-';
+  
+  // Tomamos solo la parte de la fecha antes de cualquier 'T' si viniera con hora
+  const soloFecha = String(fechaStr).split('T')[0];
+  const partes = soloFecha.split(/[-/]/);
+  
+  if (partes.length === 3) {
+    // Si viene en formato YYYY-MM-DD o YYYY/MM/DD
+    if (partes[0].length === 4) {
+      return `${partes[2].padStart(2, '0')}/${partes[1].padStart(2, '0')}/${partes[0]}`;
+    }
+    // Si ya viene en formato DD/MM/YYYY
+    return `${partes[0].padStart(2, '0')}/${partes[1].padStart(2, '0')}/${partes[2]}`;
+  }
+  
+  return soloFecha;
 }
